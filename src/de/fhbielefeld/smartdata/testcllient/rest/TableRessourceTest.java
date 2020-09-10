@@ -2,25 +2,30 @@ package de.fhbielefeld.smartdata.testcllient.rest;
 
 import de.fhbielefeld.scl.rest.util.WebTargetCreator;
 import java.time.LocalDateTime;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Test methods for the BaseResource
+ * Test methods for the TestRessource
  *
  * @author Florian Fehring
  */
-public class BaseRessourceTest {
+public class TableRessourceTest {
 
     private static LocalDateTime startDateTime;
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
-    private static final String RESOURCE = "base";
+    private static final String RESOURCE = "table";
     private static final String SCHEMA = "test";
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
 
-    public BaseRessourceTest() {
+    public TableRessourceTest() {
         startDateTime = LocalDateTime.now();
         webTarget = WebTargetCreator.createWebTarget(SERVER, RESOURCE);
     }
@@ -30,17 +35,36 @@ public class BaseRessourceTest {
      *
      * @return true if the schema could be created
      */
-    public boolean testCreateSchema() {
+    public boolean testCreateTable() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("createSchema")
+        WebTarget target = webTarget
+                .path("testtable")
+                .path("create")
                 .queryParam("schema", SCHEMA);
-        Response response = target.request(MediaType.APPLICATION_JSON).post(null);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("name", "testtable");
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // Name column
+        JsonObjectBuilder namecol = Json.createObjectBuilder();
+        namecol.add("name", "name");
+        namecol.add("type", "VARCHAR(255)");
+        colarr.add(namecol);
+        // Value column
+        JsonObjectBuilder valcol = Json.createObjectBuilder();
+        valcol.add("name", "value");
+        valcol.add("type", "REAL");
+        colarr.add(valcol);
+        builder.add("columns", colarr);
+        JsonObject dataObject = builder.build();
+        Entity<String> tabledef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testCreateSchema---");
+            System.out.println("---testCreateTable---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -50,10 +74,10 @@ public class BaseRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests the response for creating a schema, that is allready existing.
-     * 
+     *
      * @return true if response states no changes done
      */
     public boolean testCreateSchemaAllreadyExists() {

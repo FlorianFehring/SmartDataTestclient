@@ -2,6 +2,7 @@ package de.fhbielefeld.smartdata.testcllient;
 
 import de.fhbielefeld.smartdata.testcllient.rest.BaseRessourceTest;
 import de.fhbielefeld.smartdata.testcllient.rest.RecordsRessourceTest;
+import de.fhbielefeld.smartdata.testcllient.rest.TableRessourceTest;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,8 @@ public class SmartDataTestCllient {
         builder.add("testCreateSchemaAllreadyExists", brt.testCreateSchemaAllreadyExists());
         builder.add("testGetTablesNoOne", brt.testGetTablesNoOne());
         
-        
+        TableRessourceTest trt = new TableRessourceTest();
+        builder.add("testCreateTable", trt.testCreateTable());
         
         builder.add("testDeleteSchema", brt.testDeleteSchema());
 

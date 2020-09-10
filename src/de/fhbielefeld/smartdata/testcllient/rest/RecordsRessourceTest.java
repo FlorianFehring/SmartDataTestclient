@@ -26,6 +26,8 @@ public class RecordsRessourceTest {
         webTarget = WebTargetCreator.createWebTarget(SERVER, RESOURCE);
     }
 
+    
+    
     public boolean testGetOne() {
         if (webTarget == null) {
             System.out.println("WebTarget is null! Änderung?");

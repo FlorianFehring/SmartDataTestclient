@@ -40,6 +40,8 @@ public class SmartDataTestCllient {
         
         TableRessourceTest trt = new TableRessourceTest();
         builder.add("testCreateTable", trt.testCreateTable());
+        builder.add("testCreateTableAllreadyExists", trt.testCreateTableAllreadyExists());
+        builder.add("testGetColumns", trt.testGetColumns());
         
         builder.add("testDeleteSchema", brt.testDeleteSchema());
 

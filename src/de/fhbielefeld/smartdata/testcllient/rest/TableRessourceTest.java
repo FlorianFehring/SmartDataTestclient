@@ -76,21 +76,39 @@ public class TableRessourceTest {
     }
 
     /**
-     * Tests the response for creating a schema, that is allready existing.
+     * Tests the response for creating a table, that is allready existing.
      *
      * @return true if response states no changes done
      */
-    public boolean testCreateSchemaAllreadyExists() {
+    public boolean testCreateTableAllreadyExists() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("createSchema")
+        WebTarget target = webTarget.path("testtable")
+                .path("create")
                 .queryParam("schema", SCHEMA);
-        Response response = target.request(MediaType.APPLICATION_JSON).post(null);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("name", "testtable");
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // Name column
+        JsonObjectBuilder namecol = Json.createObjectBuilder();
+        namecol.add("name", "name");
+        namecol.add("type", "VARCHAR(255)");
+        colarr.add(namecol);
+        // Value column
+        JsonObjectBuilder valcol = Json.createObjectBuilder();
+        valcol.add("name", "value");
+        valcol.add("type", "REAL");
+        colarr.add(valcol);
+        builder.add("columns", colarr);
+        JsonObject dataObject = builder.build();
+        Entity<String> tabledef = Entity.json(dataObject.toString());
+        
+        Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testCreateSchemaAllreadyExists---");
+            System.out.println("---testCreateTableAllreadyExists---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -106,69 +124,18 @@ public class TableRessourceTest {
      *
      * @return
      */
-    public boolean testGetTablesNoOne() {
+    public boolean testGetColumns() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("getTables")
+        WebTarget target = webTarget.path("testtable")
+                .path("getColumns")
                 .queryParam("schema", SCHEMA);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testGetTablesNoOne---");
-            System.out.println(response.getStatusInfo());
-            System.out.println(responseText);
-        }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Tests if the list of tables is delivered
-     *
-     * @return
-     */
-    public boolean testGetTables() {
-        if (webTarget == null) {
-            System.out.println("WebTarget is missing could not connect to WebService.");
-        }
-
-        WebTarget target = webTarget.path("getTables")
-                .queryParam("schema", SCHEMA);
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
-        String responseText = response.readEntity(String.class);
-        if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testGetTables---");
-            System.out.println(response.getStatusInfo());
-            System.out.println(responseText);
-        }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Tests the deleteing of a schema
-     *
-     * @return true if schema was deleted
-     */
-    public boolean testDeleteSchema() {
-        if (webTarget == null) {
-            System.out.println("WebTarget is missing could not connect to WebService.");
-        }
-
-        WebTarget target = webTarget.path("deleteSchema")
-                .queryParam("schema", SCHEMA);
-        Response response = target.request(MediaType.APPLICATION_JSON).delete();
-        String responseText = response.readEntity(String.class);
-        if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testDeleteSchema---");
+            System.out.println("---testGetColumns---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }

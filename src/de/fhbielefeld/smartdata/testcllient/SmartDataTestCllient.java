@@ -43,11 +43,14 @@ public class SmartDataTestCllient {
         builder.add("testCreateTableAllreadyExists", trt.testCreateTableAllreadyExists());
         builder.add("testGetColumns", trt.testGetColumns());
         builder.add("testAddColumns", trt.testAddColumns());
+        RecordsRessourceTest rrt = new RecordsRessourceTest();
+        builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
+        builder.add("testGetSetSimple",rrt.testGetSetSimple());
+        builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
         
         builder.add("testDeleteSchema", brt.testDeleteSchema());
+        
 
-//        RecordsRessourceTest rrt = new RecordsRessourceTest();
-//        rrt.testGetOne();
         JsonObject dataObject = builder.build();
 
         Map<String, Object> properties = new HashMap<>(1);

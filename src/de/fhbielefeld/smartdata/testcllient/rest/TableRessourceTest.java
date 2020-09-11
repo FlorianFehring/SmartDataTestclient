@@ -3,6 +3,7 @@ package de.fhbielefeld.smartdata.testcllient.rest;
 import de.fhbielefeld.scl.rest.util.WebTargetCreator;
 import java.time.LocalDateTime;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -104,7 +105,7 @@ public class TableRessourceTest {
         builder.add("columns", colarr);
         JsonObject dataObject = builder.build();
         Entity<String> tabledef = Entity.json(dataObject.toString());
-        
+
         Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -140,6 +141,48 @@ public class TableRessourceTest {
             System.out.println(responseText);
         }
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Tests the adding of additional columns
+     *
+     * @return true if response states no changes done
+     */
+    public boolean testAddColumns() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget.path("testtable")
+                .path("addColumns")
+                .queryParam("schema", SCHEMA);
+
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // Name column
+        JsonObjectBuilder namecol = Json.createObjectBuilder();
+        namecol.add("name", "value2");
+        namecol.add("type", "INT");
+        colarr.add(namecol);
+        // Value column
+        JsonObjectBuilder valcol = Json.createObjectBuilder();
+        valcol.add("name", "value3");
+        valcol.add("type", "REAL");
+        colarr.add(valcol);
+        JsonArray dataObject = colarr.build();
+        Entity<String> tabledef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testAddColumns---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             return true;
         } else {
             return false;

@@ -42,6 +42,7 @@ public class SmartDataTestCllient {
         builder.add("testCreateTable", trt.testCreateTable());
         builder.add("testCreateTableAllreadyExists", trt.testCreateTableAllreadyExists());
         builder.add("testGetColumns", trt.testGetColumns());
+        builder.add("testAddColumns", trt.testAddColumns());
         
         builder.add("testDeleteSchema", brt.testDeleteSchema());
 

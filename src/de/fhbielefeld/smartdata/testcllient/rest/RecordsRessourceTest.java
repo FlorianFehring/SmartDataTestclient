@@ -1,12 +1,20 @@
 package de.fhbielefeld.smartdata.testcllient.rest;
 
 import de.fhbielefeld.scl.rest.util.WebTargetCreator;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParserFactory;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -34,7 +42,7 @@ public class RecordsRessourceTest {
 
     /**
      * Test createing a simple dataset
-     * 
+     *
      * @return true if dataset was created
      */
     public boolean testCreateSetSimple() {
@@ -64,7 +72,12 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
+    /**
+     * Tests to get a simple dataset
+     *
+     * @return
+     */
     public boolean testGetSetSimple() {
         if (webTarget == null) {
             System.out.println("WebTarget is null! Änderung?");
@@ -86,10 +99,11 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test createing multiple sets at once
-     * @return 
+     *
+     * @return
      */
     public boolean testCreateSetsSimple() {
         if (webTarget == null) {
@@ -99,7 +113,7 @@ public class RecordsRessourceTest {
         WebTarget target = webTarget
                 .path("testtable")
                 .queryParam("schema", SCHEMA);
-        
+
         JsonArrayBuilder jab = Json.createArrayBuilder();
         JsonObjectBuilder job1 = Json.createObjectBuilder();
         job1.add("name", "testwert1");
@@ -124,6 +138,44 @@ public class RecordsRessourceTest {
             System.out.println(responseText);
         }
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test get multiple sets
+     *
+     * @return
+     */
+    public boolean testGetSetsSimple() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testtable")
+                .queryParam("schema", SCHEMA);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsSimple---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 4) {
+                System.out.println("Expected that there are 4 datasets, but there where " + recordsArr.size());
+                return false;
+            }
             return true;
         } else {
             return false;

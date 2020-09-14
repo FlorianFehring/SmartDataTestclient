@@ -47,6 +47,7 @@ public class SmartDataTestCllient {
         builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
         builder.add("testGetSetSimple",rrt.testGetSetSimple());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
+        builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
         
         builder.add("testDeleteSchema", brt.testDeleteSchema());
         

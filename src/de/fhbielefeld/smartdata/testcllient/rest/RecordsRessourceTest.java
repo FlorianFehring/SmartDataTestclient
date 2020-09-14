@@ -55,7 +55,8 @@ public class RecordsRessourceTest {
                 .queryParam("schema", SCHEMA);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testwert");
-        builder.add("value", 12.2323);
+        builder.add("float_value", 12.2323);
+        builder.add("int_value", 12);
         JsonObject dataObject = builder.build();
         Entity<String> tabledef = Entity.json(dataObject.toString());
 
@@ -117,15 +118,18 @@ public class RecordsRessourceTest {
         JsonArrayBuilder jab = Json.createArrayBuilder();
         JsonObjectBuilder job1 = Json.createObjectBuilder();
         job1.add("name", "testwert1");
-        job1.add("value", 12.2323);
+        job1.add("float_value", 12.2323);
+        job1.add("int_value", 12);
         jab.add(job1);
         JsonObjectBuilder job2 = Json.createObjectBuilder();
         job2.add("name", "testwert2");
-        job2.add("value", -11.1111);
+        job2.add("float_value", -11.1111);
+        job2.add("int_value", -11);
         jab.add(job2);
         JsonObjectBuilder job3 = Json.createObjectBuilder();
         job3.add("name", "testwert3");
-        job3.add("value", 42.0);
+        job3.add("float_value", 42.0);
+        job3.add("int_value", 42);
         jab.add(job3);
         JsonArray dataObject = jab.build();
         Entity<String> tabledef = Entity.json(dataObject.toString());

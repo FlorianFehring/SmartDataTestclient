@@ -53,11 +53,16 @@ public class TableRessourceTest {
         namecol.add("name", "name");
         namecol.add("type", "VARCHAR(255)");
         colarr.add(namecol);
-        // Value column
-        JsonObjectBuilder valcol = Json.createObjectBuilder();
-        valcol.add("name", "value");
-        valcol.add("type", "REAL");
-        colarr.add(valcol);
+        // Float value column
+        JsonObjectBuilder  floatcol = Json.createObjectBuilder();
+        floatcol.add("name", "float_value");
+        floatcol.add("type", "REAL");
+        colarr.add(floatcol);
+        // Int value column
+        JsonObjectBuilder intcol = Json.createObjectBuilder();
+        intcol.add("name", "int_value");
+        intcol.add("type", "INT");
+        colarr.add(intcol);
         builder.add("columns", colarr);
         JsonObject dataObject = builder.build();
         Entity<String> tabledef = Entity.json(dataObject.toString());
@@ -164,12 +169,12 @@ public class TableRessourceTest {
         JsonArrayBuilder colarr = Json.createArrayBuilder();
         // Name column
         JsonObjectBuilder namecol = Json.createObjectBuilder();
-        namecol.add("name", "value2");
+        namecol.add("name", "addedColumn1");
         namecol.add("type", "INT");
         colarr.add(namecol);
         // Value column
         JsonObjectBuilder valcol = Json.createObjectBuilder();
-        valcol.add("name", "value3");
+        valcol.add("name", "addedColumn2");
         valcol.add("type", "REAL");
         colarr.add(valcol);
         JsonArray dataObject = colarr.build();

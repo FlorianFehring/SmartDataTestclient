@@ -37,7 +37,7 @@ public class SmartDataTestCllient {
         builder.add("testCreateSchema", brt.testCreateSchema());
         builder.add("testCreateSchemaAllreadyExists", brt.testCreateSchemaAllreadyExists());
         builder.add("testGetTablesNoOne", brt.testGetTablesNoOne());
-        
+
         TableRessourceTest trt = new TableRessourceTest();
         builder.add("testCreateTable", trt.testCreateTable());
         builder.add("testCreateTableAllreadyExists", trt.testCreateTableAllreadyExists());
@@ -45,12 +45,12 @@ public class SmartDataTestCllient {
         builder.add("testAddColumns", trt.testAddColumns());
         RecordsRessourceTest rrt = new RecordsRessourceTest();
         builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
-        builder.add("testGetSetSimple",rrt.testGetSetSimple());
+        builder.add("testGetSetSimple", rrt.testGetSetSimple());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
         builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
-        
+        builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
+
         builder.add("testDeleteSchema", brt.testDeleteSchema());
-        
 
         JsonObject dataObject = builder.build();
 
@@ -61,7 +61,7 @@ public class SmartDataTestCllient {
         JsonWriter jsonWriter = writerFactory.createWriter(sw);
         jsonWriter.writeObject(dataObject);
         jsonWriter.close();
-        
+
         System.out.println(sw.toString());
         return true;
     }

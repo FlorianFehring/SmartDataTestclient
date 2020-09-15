@@ -149,6 +149,45 @@ public class RecordsRessourceTest {
     }
 
     /**
+     * Tests if values with unicode chars can be inserted.
+     * Note: If this does not succseed the problem can be, that the underliyng 
+     * database is not UTF8 encoded.
+     * 
+     * @return 
+     */
+    public boolean testCreateSetUnicode() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("testtable")
+                .queryParam("schema", SCHEMA);
+
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        JsonObjectBuilder job1 = Json.createObjectBuilder();
+        job1.add("name", "Oława - Żołnierzy");
+        job1.add("float_value", 99.999);
+        job1.add("int_value", 99);
+        jab.add(job1);
+        JsonArray dataObject = jab.build();
+        Entity<String> tabledef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateSetUnicode---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Test get multiple sets
      *
      * @return

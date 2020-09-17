@@ -51,6 +51,7 @@ public class RecordsRessourceTest {
         builder.add("name", "testwert");
         builder.add("float_value", 12.2323);
         builder.add("int_value", 12);
+        builder.add("ts_value","2011-12-30T10:15:30");
         JsonObject dataObject = builder.build();
         Entity<String> tabledef = Entity.json(dataObject.toString());
 
@@ -114,16 +115,19 @@ public class RecordsRessourceTest {
         job1.add("name", "testwert1");
         job1.add("float_value", 12.2323);
         job1.add("int_value", 12);
+        job1.add("ts_value","31.12.2019 12:14");
         jab.add(job1);
         JsonObjectBuilder job2 = Json.createObjectBuilder();
         job2.add("name", "testwert2");
         job2.add("float_value", -11.1111);
         job2.add("int_value", -11);
+        job2.add("ts_value", "2011-12-30T10:15:30");
         jab.add(job2);
         JsonObjectBuilder job3 = Json.createObjectBuilder();
         job3.add("name", "testwert3");
         job3.add("float_value", 42.0);
         job3.add("int_value", 42);
+        job3.add("ts_value","2011-12-30 10:15:30.123");
         jab.add(job3);
         JsonArray dataObject = jab.build();
         Entity<String> tabledef = Entity.json(dataObject.toString());
@@ -131,7 +135,7 @@ public class RecordsRessourceTest {
         Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testCreateSetSimple---");
+            System.out.println("---testCreateSetsSimple---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }

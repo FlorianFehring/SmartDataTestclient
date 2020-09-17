@@ -63,6 +63,11 @@ public class TableRessourceTest {
         intcol.add("name", "int_value");
         intcol.add("type", "INT");
         colarr.add(intcol);
+        // Timestamp column
+        JsonObjectBuilder tscol = Json.createObjectBuilder();
+        tscol.add("name", "ts_value");
+        tscol.add("type", "TIMESTAMP");
+        colarr.add(tscol);
         builder.add("columns", colarr);
         JsonObject dataObject = builder.build();
         Entity<String> tabledef = Entity.json(dataObject.toString());

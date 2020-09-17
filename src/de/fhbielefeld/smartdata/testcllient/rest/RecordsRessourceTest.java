@@ -1,20 +1,14 @@
 package de.fhbielefeld.smartdata.testcllient.rest;
 
 import de.fhbielefeld.scl.rest.util.WebTargetCreator;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParserFactory;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -149,11 +143,11 @@ public class RecordsRessourceTest {
     }
 
     /**
-     * Tests if values with unicode chars can be inserted.
-     * Note: If this does not succseed the problem can be, that the underliyng 
-     * database is not UTF8 encoded.
-     * 
-     * @return 
+     * Tests if values with unicode chars can be inserted. Note: If this does
+     * not succseed the problem can be, that the underliyng database is not UTF8
+     * encoded.
+     *
+     * @return
      */
     public boolean testCreateSetUnicode() {
         if (webTarget == null) {
@@ -186,7 +180,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test get multiple sets
      *
@@ -219,6 +213,92 @@ public class RecordsRessourceTest {
                 System.out.println("Expected that there are 4 datasets, but there where " + recordsArr.size());
                 return false;
             }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test updateing a simple dataset
+     *
+     * @return true if dataset was updated
+     */
+    public boolean testUpdateSetSimple() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("testtable")
+                .path("1")
+                .queryParam("schema", SCHEMA);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("name", "neuer testwert");
+        builder.add("float_value", 0.3333);
+        builder.add("int_value", 0);
+        JsonObject dataObject = builder.build();
+        Entity<String> tabledef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testUpdateSetSimple---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test updateing three datasets at once
+     *
+     * @return true if dataset was updated
+     */
+    public boolean testUpdateSetsSimple() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("testtable")
+                .queryParam("schema", SCHEMA);
+        JsonArrayBuilder sets = Json.createArrayBuilder();
+        JsonObjectBuilder set1 = Json.createObjectBuilder();
+        set1.add("id",1);
+        set1.add("name", "neuer testwert id 1");
+        set1.add("float_value", 0.3333);
+        set1.add("int_value", 0);
+        sets.add(set1);
+        JsonObjectBuilder set2 = Json.createObjectBuilder();
+        set2.add("id",2);
+        set2.add("name", "neuer testwert id 2");
+        set2.add("float_value", 0.3333);
+        set2.add("int_value", 0);
+        sets.add(set2);
+        JsonObjectBuilder set3 = Json.createObjectBuilder();
+        set3.add("id",3);
+        set3.add("name", "neuer testwert id 3");
+        set3.add("float_value", 0.3333);
+        set3.add("int_value", 0);
+        sets.add(set3);
+        JsonObjectBuilder env = Json.createObjectBuilder();
+        env.add("records", sets);
+        
+        Entity<String> tabledef = Entity.json(env.build().toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testUpdateSetsSimple---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return true;
         } else {
             return false;

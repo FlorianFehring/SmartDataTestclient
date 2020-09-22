@@ -47,15 +47,15 @@ public class SmartDataTestCllient {
         builder.add("testGetGeoColumns", trt.testGetGeoColumns());
         builder.add("testChangeSRID", trt.testChangeSRID());
         RecordsRessourceTest rrt = new RecordsRessourceTest();
-//        builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
-//        builder.add("testGetSetSimple", rrt.testGetSetSimple());
-//        builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
-//        builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
-//        builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
-//        builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());
-//        builder.add("testUpdateSetsSimple", rrt.testUpdateSetsSimple());
-//        builder.add("testDeleteSet", rrt.testDeleteSet());
-//        builder.add("testDeleteSets", rrt.testDeleteSets());
+        builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
+        builder.add("testGetSetSimple", rrt.testGetSetSimple());
+        builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
+        builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
+        builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
+        builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());
+        builder.add("testUpdateSetsSimple", rrt.testUpdateSetsSimple());
+        builder.add("testDeleteSet", rrt.testDeleteSet());
+        builder.add("testDeleteSets", rrt.testDeleteSets());
 
         builder.add("testDeleteSchema", brt.testDeleteSchema());
 

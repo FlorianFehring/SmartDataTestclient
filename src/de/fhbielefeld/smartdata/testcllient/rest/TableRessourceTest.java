@@ -220,9 +220,6 @@ public class TableRessourceTest {
         JsonObjectBuilder pointcol = Json.createObjectBuilder();
         pointcol.add("name", "addedGeoColumn1");
         pointcol.add("type", "geometry(Point,4326)");
-        pointcol.add("subtype", "POINT");
-        pointcol.add("srid", "4326");
-        pointcol.add("dimension", 2);
         colarr.add(pointcol);
         JsonArray dataObject = colarr.build();
         Entity<String> tabledef = Entity.json(dataObject.toString());
@@ -278,6 +275,74 @@ public class TableRessourceTest {
         }
 
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Tests the adding of additional columns
+     *
+     * @return true if response states no changes done
+     */
+    public boolean testChangeSRID() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget.path("testtable")
+                .path("changeColumn")
+                .queryParam("schema", SCHEMA);
+
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // Name column
+        JsonObjectBuilder pointcol = Json.createObjectBuilder();
+        pointcol.add("name", "addedGeoColumn1");
+        pointcol.add("srid", "3857");
+        colarr.add(pointcol);
+        JsonArray dataObject = colarr.build();
+        Entity<String> tabledef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testChangeSRID---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // Request 
+            WebTarget targetCheck = webTarget.path("testtable")
+                    .path("getColumns")
+                    .queryParam("schema", SCHEMA);
+            Response responseCheck = targetCheck.request(MediaType.APPLICATION_JSON).get();
+            String responseTextCheck = responseCheck.readEntity(String.class);
+            if (PRINT_DEBUG_MESSAGES) {
+                System.out.println("---testChangeSRIDCheck---");
+                System.out.println(responseCheck.getStatusInfo());
+                System.out.println(responseTextCheck);
+            }
+
+            JsonParser parser = Json.createParser(new StringReader(responseTextCheck));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray listArr = responseObj.getJsonArray("list");
+            for (int i = 0; i < listArr.size(); i++) {
+                JsonObject curObj = (JsonObject) listArr.get(i);
+                if (curObj.getString("name").equals("addedGeoColumn1")) {
+                    String type = curObj.getString("type");
+                    if (!type.equalsIgnoreCase("geometry")) {
+                        System.out.println("Expected >geometry< but was >" + type + "<");
+                        return false;
+                    }
+                    int srid = curObj.getInt("srid");
+                    if (srid != 3857) {
+                        System.out.println("Expected srid to be >3857< but was >" + srid + "<");
+                        return false;
+                    }
+                }
+            }
             return true;
         } else {
             return false;

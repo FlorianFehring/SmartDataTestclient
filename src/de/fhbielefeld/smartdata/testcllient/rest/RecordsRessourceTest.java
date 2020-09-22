@@ -308,4 +308,64 @@ public class RecordsRessourceTest {
             return false;
         }
     }
+    
+    /**
+     * Test the deletion of an dataset
+     * 
+     * @return true if the dataset was deleted
+     */
+    public boolean testDeleteSet() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+        
+        // Delete dataset one
+        WebTarget target = webTarget
+                .path("testtable")
+                .path("1")
+                .queryParam("schema", SCHEMA);
+
+        Response response = target.request(MediaType.APPLICATION_JSON).delete();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testDeleteSet---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Test the deletion of multiple datasets
+     * 
+     * @return true if the dataset was deleted
+     */
+    public boolean testDeleteSets() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+        
+        // Delete dataset one
+        WebTarget target = webTarget
+                .path("testtable")
+                .path("2,3")
+                .queryParam("schema", SCHEMA);
+
+        Response response = target.request(MediaType.APPLICATION_JSON).delete();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testDeleteSets---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

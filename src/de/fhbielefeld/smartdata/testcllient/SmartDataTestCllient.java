@@ -43,6 +43,8 @@ public class SmartDataTestCllient {
         builder.add("testCreateTableAllreadyExists", trt.testCreateTableAllreadyExists());
         builder.add("testGetColumns", trt.testGetColumns());
         builder.add("testAddColumns", trt.testAddColumns());
+        builder.add("testAddGeoColumns", trt.testAddGeoColumns());
+        builder.add("testGetGeoColumns", trt.testGetGeoColumns());
         RecordsRessourceTest rrt = new RecordsRessourceTest();
         builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
         builder.add("testGetSetSimple", rrt.testGetSetSimple());

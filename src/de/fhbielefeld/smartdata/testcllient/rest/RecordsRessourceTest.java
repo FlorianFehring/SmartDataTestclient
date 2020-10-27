@@ -24,7 +24,7 @@ public class RecordsRessourceTest {
     private static LocalDateTime startDateTime;
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
     private static final String RESOURCE = "records";
-    private static final String SCHEMA = "test";
+    private static final String STORAGE = "test";
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
 
@@ -46,7 +46,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget
                 .path("testtable")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testwert");
         builder.add("float_value", 12.2323);
@@ -81,7 +81,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testtable")
                 .path("1")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -97,6 +97,34 @@ public class RecordsRessourceTest {
     }
 
     /**
+     * Tests to get a dataset with only included columns
+     *
+     * @return
+     */
+    public boolean testGetSetIncludes() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testtable")
+                .path("1")
+                .queryParam("storage", STORAGE)
+                .queryParam("includes", "");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetIncludes---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Test createing multiple sets at once
      *
      * @return
@@ -108,7 +136,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget
                 .path("testtable")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
 
         JsonArrayBuilder jab = Json.createArrayBuilder();
         JsonObjectBuilder job1 = Json.createObjectBuilder();
@@ -147,6 +175,32 @@ public class RecordsRessourceTest {
     }
 
     /**
+     * Tests to get a simple dataset
+     *
+     * @return
+     */
+    public boolean testEqualsFilter() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testtable")
+                .queryParam("storage", STORAGE);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testEqualsFilter---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Tests if values with unicode chars can be inserted. Note: If this does
      * not succseed the problem can be, that the underliyng database is not UTF8
      * encoded.
@@ -160,7 +214,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget
                 .path("testtable")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
 
         JsonArrayBuilder jab = Json.createArrayBuilder();
         JsonObjectBuilder job1 = Json.createObjectBuilder();
@@ -196,7 +250,7 @@ public class RecordsRessourceTest {
         }
 
         WebTarget target = webTarget.path("testtable")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -236,7 +290,7 @@ public class RecordsRessourceTest {
         WebTarget target = webTarget
                 .path("testtable")
                 .path("1")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "neuer testwert");
         builder.add("float_value", 0.3333);
@@ -270,7 +324,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget
                 .path("testtable")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         JsonArrayBuilder sets = Json.createArrayBuilder();
         JsonObjectBuilder set1 = Json.createObjectBuilder();
         set1.add("id",1);
@@ -323,7 +377,7 @@ public class RecordsRessourceTest {
         WebTarget target = webTarget
                 .path("testtable")
                 .path("1")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
 
         Response response = target.request(MediaType.APPLICATION_JSON).delete();
         String responseText = response.readEntity(String.class);
@@ -353,7 +407,7 @@ public class RecordsRessourceTest {
         WebTarget target = webTarget
                 .path("testtable")
                 .path("2,3")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
 
         Response response = target.request(MediaType.APPLICATION_JSON).delete();
         String responseText = response.readEntity(String.class);

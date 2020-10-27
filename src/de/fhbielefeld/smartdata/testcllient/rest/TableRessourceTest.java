@@ -24,7 +24,7 @@ public class TableRessourceTest {
     private static LocalDateTime startDateTime;
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
     private static final String RESOURCE = "table";
-    private static final String SCHEMA = "test";
+    private static final String STORAGE = "test";
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
 
@@ -34,9 +34,9 @@ public class TableRessourceTest {
     }
 
     /**
-     * Test create a schema
+     * Test create a collection
      *
-     * @return true if the schema could be created
+     * @return true if the collection could be created
      */
     public boolean testCreateTable() {
         if (webTarget == null) {
@@ -46,7 +46,7 @@ public class TableRessourceTest {
         WebTarget target = webTarget
                 .path("testtable")
                 .path("create")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testtable");
         JsonArrayBuilder colarr = Json.createArrayBuilder();
@@ -100,7 +100,7 @@ public class TableRessourceTest {
 
         WebTarget target = webTarget.path("testtable")
                 .path("create")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testtable");
         JsonArrayBuilder colarr = Json.createArrayBuilder();
@@ -133,7 +133,7 @@ public class TableRessourceTest {
     }
 
     /**
-     * Tests if there comes an empty list, if there are no tables in the schema
+     * Tests if there comes an empty list, if there are no tables in the storage
      *
      * @return
      */
@@ -144,7 +144,7 @@ public class TableRessourceTest {
 
         WebTarget target = webTarget.path("testtable")
                 .path("getColumns")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -171,7 +171,7 @@ public class TableRessourceTest {
 
         WebTarget target = webTarget.path("testtable")
                 .path("addColumns")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
 
         JsonArrayBuilder colarr = Json.createArrayBuilder();
         // Name column
@@ -213,7 +213,7 @@ public class TableRessourceTest {
 
         WebTarget target = webTarget.path("testtable")
                 .path("addColumns")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
 
         JsonArrayBuilder colarr = Json.createArrayBuilder();
         // Name column
@@ -250,7 +250,7 @@ public class TableRessourceTest {
 
         WebTarget target = webTarget.path("testtable")
                 .path("getColumns")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -293,7 +293,7 @@ public class TableRessourceTest {
 
         WebTarget target = webTarget.path("testtable")
                 .path("changeColumn")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
 
         JsonArrayBuilder colarr = Json.createArrayBuilder();
         // Name column
@@ -315,7 +315,7 @@ public class TableRessourceTest {
             // Request 
             WebTarget targetCheck = webTarget.path("testtable")
                     .path("getColumns")
-                    .queryParam("schema", SCHEMA);
+                    .queryParam("storage", STORAGE);
             Response responseCheck = targetCheck.request(MediaType.APPLICATION_JSON).get();
             String responseTextCheck = responseCheck.readEntity(String.class);
             if (PRINT_DEBUG_MESSAGES) {

@@ -1,6 +1,6 @@
 package de.fhbielefeld.smartdata.testcllient;
 
-import de.fhbielefeld.smartdata.testcllient.rest.BaseRessourceTest;
+import de.fhbielefeld.smartdata.testcllient.rest.StorageRessourceTest;
 import de.fhbielefeld.smartdata.testcllient.rest.RecordsRessourceTest;
 import de.fhbielefeld.smartdata.testcllient.rest.TableRessourceTest;
 import java.io.StringWriter;
@@ -33,9 +33,9 @@ public class SmartDataTestCllient {
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        BaseRessourceTest brt = new BaseRessourceTest();
-        builder.add("testCreateSchema", brt.testCreateSchema());
-        builder.add("testCreateSchemaAllreadyExists", brt.testCreateSchemaAllreadyExists());
+        StorageRessourceTest brt = new StorageRessourceTest();
+        builder.add("testCreateStorage", brt.testCreateStorage());
+        builder.add("testCreateStorageAllreadyExists", brt.testCreateStorageAllreadyExists());
         builder.add("testGetTablesNoOne", brt.testGetTablesNoOne());
 
         TableRessourceTest trt = new TableRessourceTest();
@@ -57,7 +57,7 @@ public class SmartDataTestCllient {
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());
 
-        builder.add("testDeleteSchema", brt.testDeleteSchema());
+        builder.add("testDeleteStorage", brt.testDeleteStorage());
 
         JsonObject dataObject = builder.build();
 

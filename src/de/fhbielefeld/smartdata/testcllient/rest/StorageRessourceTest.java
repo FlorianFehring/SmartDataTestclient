@@ -7,40 +7,40 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Test methods for the BaseResource
+ * Test methods for the StorageResource
  *
  * @author Florian Fehring
  */
-public class BaseRessourceTest {
+public class StorageRessourceTest {
 
     private static LocalDateTime startDateTime;
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
-    private static final String RESOURCE = "base";
-    private static final String SCHEMA = "test";
+    private static final String RESOURCE = "storage";
+    private static final String STORAGE = "test";
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
 
-    public BaseRessourceTest() {
+    public StorageRessourceTest() {
         startDateTime = LocalDateTime.now();
         webTarget = WebTargetCreator.createWebTarget(SERVER, RESOURCE);
     }
 
     /**
-     * Test create a schema
+     * Test create a storage
      *
-     * @return true if the schema could be created
+     * @return true if the storage could be created
      */
-    public boolean testCreateSchema() {
+    public boolean testCreateStorage() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("createSchema")
-                .queryParam("schema", SCHEMA);
+        WebTarget target = webTarget.path("create")
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).post(null);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testCreateSchema---");
+            System.out.println("---testCreateStorage---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -52,21 +52,21 @@ public class BaseRessourceTest {
     }
     
     /**
-     * Tests the response for creating a schema, that is allready existing.
+     * Tests the response for creating a storage, that is allready existing.
      * 
      * @return true if response states no changes done
      */
-    public boolean testCreateSchemaAllreadyExists() {
+    public boolean testCreateStorageAllreadyExists() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("createSchema")
-                .queryParam("schema", SCHEMA);
+        WebTarget target = webTarget.path("create")
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).post(null);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testCreateSchemaAllreadyExists---");
+            System.out.println("---testCreateStorageAllreadyExists---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -78,7 +78,7 @@ public class BaseRessourceTest {
     }
 
     /**
-     * Tests if there comes an empty list, if there are no tables in the schema
+     * Tests if there comes an empty list, if there are no tables in the storage
      *
      * @return
      */
@@ -88,7 +88,7 @@ public class BaseRessourceTest {
         }
 
         WebTarget target = webTarget.path("getTables")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -114,7 +114,7 @@ public class BaseRessourceTest {
         }
 
         WebTarget target = webTarget.path("getTables")
-                .queryParam("schema", SCHEMA);
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -130,21 +130,21 @@ public class BaseRessourceTest {
     }
 
     /**
-     * Tests the deleteing of a schema
+     * Tests the deleteing of a storage
      *
-     * @return true if schema was deleted
+     * @return true if storage was deleted
      */
-    public boolean testDeleteSchema() {
+    public boolean testDeleteStorage() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("deleteSchema")
-                .queryParam("schema", SCHEMA);
+        WebTarget target = webTarget.path("delete")
+                .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).delete();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testDeleteSchema---");
+            System.out.println("---testDeleteStorage---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }

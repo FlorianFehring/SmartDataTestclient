@@ -19,16 +19,16 @@ import javax.ws.rs.core.Response;
  *
  * @author Florian Fehring
  */
-public class TableRessourceTest {
+public class CollectionRessourceTest {
 
     private static LocalDateTime startDateTime;
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
-    private static final String RESOURCE = "table";
+    private static final String RESOURCE = "collection";
     private static final String STORAGE = "test";
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
 
-    public TableRessourceTest() {
+    public CollectionRessourceTest() {
         startDateTime = LocalDateTime.now();
         webTarget = WebTargetCreator.createWebTarget(SERVER, RESOURCE);
     }
@@ -38,17 +38,17 @@ public class TableRessourceTest {
      *
      * @return true if the collection could be created
      */
-    public boolean testCreateTable() {
+    public boolean testCreateCollection() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
         WebTarget target = webTarget
-                .path("testtable")
+                .path("testcol")
                 .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        builder.add("name", "testtable");
+        builder.add("name", "testcol");
         JsonArrayBuilder colarr = Json.createArrayBuilder();
         // Name column
         JsonObjectBuilder namecol = Json.createObjectBuilder();
@@ -72,12 +72,12 @@ public class TableRessourceTest {
         colarr.add(tscol);
         builder.add("columns", colarr);
         JsonObject dataObject = builder.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> coldef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testCreateTable---");
+            System.out.println("---testCreateCollection---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -89,20 +89,20 @@ public class TableRessourceTest {
     }
 
     /**
-     * Tests the response for creating a table, that is allready existing.
+     * Tests the response for creating a collection, that is allready existing.
      *
      * @return true if response states no changes done
      */
-    public boolean testCreateTableAllreadyExists() {
+    public boolean testCreateCollectionAllreadyExists() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        builder.add("name", "testtable");
+        builder.add("name", "testcol");
         JsonArrayBuilder colarr = Json.createArrayBuilder();
         // Name column
         JsonObjectBuilder namecol = Json.createObjectBuilder();
@@ -116,12 +116,12 @@ public class TableRessourceTest {
         colarr.add(valcol);
         builder.add("columns", colarr);
         JsonObject dataObject = builder.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> coldef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testCreateTableAllreadyExists---");
+            System.out.println("---testCreateCollectionAllreadyExists---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -133,7 +133,7 @@ public class TableRessourceTest {
     }
 
     /**
-     * Tests if there comes an empty list, if there are no tables in the storage
+     * Tests if there comes an empty list, if there are no collections in the storage
      *
      * @return
      */
@@ -142,7 +142,7 @@ public class TableRessourceTest {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .path("getColumns")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
@@ -169,7 +169,7 @@ public class TableRessourceTest {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .path("addColumns")
                 .queryParam("storage", STORAGE);
 
@@ -185,9 +185,9 @@ public class TableRessourceTest {
         valcol.add("type", "REAL");
         colarr.add(valcol);
         JsonArray dataObject = colarr.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> coldef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).put(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testAddColumns---");
@@ -211,7 +211,7 @@ public class TableRessourceTest {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .path("addColumns")
                 .queryParam("storage", STORAGE);
 
@@ -222,9 +222,9 @@ public class TableRessourceTest {
         pointcol.add("type", "geometry(Point,4326)");
         colarr.add(pointcol);
         JsonArray dataObject = colarr.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> coldef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).put(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testAddGeoColumns---");
@@ -248,7 +248,7 @@ public class TableRessourceTest {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .path("getColumns")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
@@ -291,7 +291,7 @@ public class TableRessourceTest {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .path("changeColumn")
                 .queryParam("storage", STORAGE);
 
@@ -302,9 +302,9 @@ public class TableRessourceTest {
         pointcol.add("srid", "3857");
         colarr.add(pointcol);
         JsonArray dataObject = colarr.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> coldef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).put(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testChangeSRID---");
@@ -313,7 +313,7 @@ public class TableRessourceTest {
         }
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             // Request 
-            WebTarget targetCheck = webTarget.path("testtable")
+            WebTarget targetCheck = webTarget.path("testcol")
                     .path("getColumns")
                     .queryParam("storage", STORAGE);
             Response responseCheck = targetCheck.request(MediaType.APPLICATION_JSON).get();

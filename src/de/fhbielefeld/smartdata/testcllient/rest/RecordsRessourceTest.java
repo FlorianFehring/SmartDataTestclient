@@ -45,7 +45,7 @@ public class RecordsRessourceTest {
         }
 
         WebTarget target = webTarget
-                .path("testtable")
+                .path("testcol")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testwert");
@@ -53,9 +53,9 @@ public class RecordsRessourceTest {
         builder.add("int_value", 12);
         builder.add("ts_value","2011-12-30T10:15:30");
         JsonObject dataObject = builder.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> collectiondef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testCreateSetSimple---");
@@ -79,7 +79,7 @@ public class RecordsRessourceTest {
             System.out.println("WebTarget is null! Änderung?");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .path("1")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
@@ -106,7 +106,7 @@ public class RecordsRessourceTest {
             System.out.println("WebTarget is null! Änderung?");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .path("1")
                 .queryParam("storage", STORAGE)
                 .queryParam("includes", "");
@@ -135,7 +135,7 @@ public class RecordsRessourceTest {
         }
 
         WebTarget target = webTarget
-                .path("testtable")
+                .path("testcol")
                 .queryParam("storage", STORAGE);
 
         JsonArrayBuilder jab = Json.createArrayBuilder();
@@ -158,9 +158,9 @@ public class RecordsRessourceTest {
         job3.add("ts_value","2011-12-30 10:15:30.123");
         jab.add(job3);
         JsonArray dataObject = jab.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> collectiondef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testCreateSetsSimple---");
@@ -184,7 +184,7 @@ public class RecordsRessourceTest {
             System.out.println("WebTarget is null! Änderung?");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
@@ -213,7 +213,7 @@ public class RecordsRessourceTest {
         }
 
         WebTarget target = webTarget
-                .path("testtable")
+                .path("testcol")
                 .queryParam("storage", STORAGE);
 
         JsonArrayBuilder jab = Json.createArrayBuilder();
@@ -223,9 +223,9 @@ public class RecordsRessourceTest {
         job1.add("int_value", 99);
         jab.add(job1);
         JsonArray dataObject = jab.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> coldef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).post(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testCreateSetUnicode---");
@@ -249,7 +249,7 @@ public class RecordsRessourceTest {
             System.out.println("WebTarget is null! Änderung?");
         }
 
-        WebTarget target = webTarget.path("testtable")
+        WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
@@ -288,7 +288,7 @@ public class RecordsRessourceTest {
         }
 
         WebTarget target = webTarget
-                .path("testtable")
+                .path("testcol")
                 .path("1")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -296,9 +296,9 @@ public class RecordsRessourceTest {
         builder.add("float_value", 0.3333);
         builder.add("int_value", 0);
         JsonObject dataObject = builder.build();
-        Entity<String> tabledef = Entity.json(dataObject.toString());
+        Entity<String> coldef = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).put(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testUpdateSetSimple---");
@@ -323,7 +323,7 @@ public class RecordsRessourceTest {
         }
 
         WebTarget target = webTarget
-                .path("testtable")
+                .path("testcol")
                 .queryParam("storage", STORAGE);
         JsonArrayBuilder sets = Json.createArrayBuilder();
         JsonObjectBuilder set1 = Json.createObjectBuilder();
@@ -347,9 +347,9 @@ public class RecordsRessourceTest {
         JsonObjectBuilder env = Json.createObjectBuilder();
         env.add("records", sets);
         
-        Entity<String> tabledef = Entity.json(env.build().toString());
+        Entity<String> coldef = Entity.json(env.build().toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).put(tabledef);
+        Response response = target.request(MediaType.APPLICATION_JSON).put(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testUpdateSetsSimple---");
@@ -375,7 +375,7 @@ public class RecordsRessourceTest {
         
         // Delete dataset one
         WebTarget target = webTarget
-                .path("testtable")
+                .path("testcol")
                 .path("1")
                 .queryParam("storage", STORAGE);
 
@@ -405,7 +405,7 @@ public class RecordsRessourceTest {
         
         // Delete dataset one
         WebTarget target = webTarget
-                .path("testtable")
+                .path("testcol")
                 .path("2,3")
                 .queryParam("storage", STORAGE);
 

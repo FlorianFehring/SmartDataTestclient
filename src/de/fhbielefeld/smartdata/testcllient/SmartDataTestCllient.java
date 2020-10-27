@@ -2,7 +2,7 @@ package de.fhbielefeld.smartdata.testcllient;
 
 import de.fhbielefeld.smartdata.testcllient.rest.StorageRessourceTest;
 import de.fhbielefeld.smartdata.testcllient.rest.RecordsRessourceTest;
-import de.fhbielefeld.smartdata.testcllient.rest.TableRessourceTest;
+import de.fhbielefeld.smartdata.testcllient.rest.CollectionRessourceTest;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,11 +36,11 @@ public class SmartDataTestCllient {
         StorageRessourceTest brt = new StorageRessourceTest();
         builder.add("testCreateStorage", brt.testCreateStorage());
         builder.add("testCreateStorageAllreadyExists", brt.testCreateStorageAllreadyExists());
-        builder.add("testGetTablesNoOne", brt.testGetTablesNoOne());
+        builder.add("testGetCollectionsNoOne", brt.testGetCollectionsNoOne());
 
-        TableRessourceTest trt = new TableRessourceTest();
-        builder.add("testCreateTable", trt.testCreateTable());
-        builder.add("testCreateTableAllreadyExists", trt.testCreateTableAllreadyExists());
+        CollectionRessourceTest trt = new CollectionRessourceTest();
+        builder.add("testCreateCollection", trt.testCreateCollection());
+        builder.add("testCreateCollectionAllreadyExists", trt.testCreateCollectionAllreadyExists());
         builder.add("testGetColumns", trt.testGetColumns());
         builder.add("testAddColumns", trt.testAddColumns());
         builder.add("testAddGeoColumns", trt.testAddGeoColumns());

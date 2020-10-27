@@ -78,21 +78,21 @@ public class StorageRessourceTest {
     }
 
     /**
-     * Tests if there comes an empty list, if there are no tables in the storage
+     * Tests if there comes an empty list, if there are no collections in the storage
      *
      * @return
      */
-    public boolean testGetTablesNoOne() {
+    public boolean testGetCollectionsNoOne() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("getTables")
+        WebTarget target = webTarget.path("getCollections")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testGetTablesNoOne---");
+            System.out.println("---testGetCollectionsNoOne---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -104,21 +104,21 @@ public class StorageRessourceTest {
     }
 
     /**
-     * Tests if the list of tables is delivered
+     * Tests if the list of collections is delivered
      *
      * @return
      */
-    public boolean testGetTables() {
+    public boolean testGetCollections() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-        WebTarget target = webTarget.path("getTables")
+        WebTarget target = webTarget.path("getCollectionss")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testGetTables---");
+            System.out.println("---testGetCollections---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }

@@ -97,7 +97,7 @@ public class RecordsRessourceTest {
     }
 
     /**
-     * Tests to get a dataset with only included columns
+     * Tests to get a dataset with only included attributes
      *
      * @return
      */

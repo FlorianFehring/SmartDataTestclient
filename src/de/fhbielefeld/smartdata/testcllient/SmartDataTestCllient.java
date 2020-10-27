@@ -41,10 +41,10 @@ public class SmartDataTestCllient {
         CollectionRessourceTest trt = new CollectionRessourceTest();
         builder.add("testCreateCollection", trt.testCreateCollection());
         builder.add("testCreateCollectionAllreadyExists", trt.testCreateCollectionAllreadyExists());
-        builder.add("testGetColumns", trt.testGetColumns());
-        builder.add("testAddColumns", trt.testAddColumns());
-        builder.add("testAddGeoColumns", trt.testAddGeoColumns());
-        builder.add("testGetGeoColumns", trt.testGetGeoColumns());
+        builder.add("testGetAttributes", trt.testGetAttributes());
+        builder.add("testAddAttributes", trt.testAddAttributes());
+        builder.add("testAddGeoAttributes", trt.testAddGeoAttributes());
+        builder.add("testGetGeoAttributes", trt.testGetGeoAttributes());
         builder.add("testChangeSRID", trt.testChangeSRID());
         RecordsRessourceTest rrt = new RecordsRessourceTest();
         builder.add("testCreateSetSimple", rrt.testCreateSetSimple());

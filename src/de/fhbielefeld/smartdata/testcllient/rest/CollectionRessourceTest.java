@@ -70,7 +70,7 @@ public class CollectionRessourceTest {
         tscol.add("name", "ts_value");
         tscol.add("type", "TIMESTAMP");
         colarr.add(tscol);
-        builder.add("columns", colarr);
+        builder.add("attributes", colarr);
         JsonObject dataObject = builder.build();
         Entity<String> coldef = Entity.json(dataObject.toString());
 
@@ -114,7 +114,7 @@ public class CollectionRessourceTest {
         valcol.add("name", "value");
         valcol.add("type", "REAL");
         colarr.add(valcol);
-        builder.add("columns", colarr);
+        builder.add("attributes", colarr);
         JsonObject dataObject = builder.build();
         Entity<String> coldef = Entity.json(dataObject.toString());
 
@@ -137,18 +137,18 @@ public class CollectionRessourceTest {
      *
      * @return
      */
-    public boolean testGetColumns() {
+    public boolean testGetAttributes() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("getColumns")
+                .path("getAttributes")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testGetColumns---");
+            System.out.println("---testGetAttributes---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -160,28 +160,28 @@ public class CollectionRessourceTest {
     }
 
     /**
-     * Tests the adding of additional columns
+     * Tests the adding of additional attributes
      *
      * @return true if response states no changes done
      */
-    public boolean testAddColumns() {
+    public boolean testAddAttributes() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("addColumns")
+                .path("addAttributes")
                 .queryParam("storage", STORAGE);
 
         JsonArrayBuilder colarr = Json.createArrayBuilder();
-        // Name column
+        // Name attribute
         JsonObjectBuilder namecol = Json.createObjectBuilder();
-        namecol.add("name", "addedColumn1");
+        namecol.add("name", "addedAttribute1");
         namecol.add("type", "INT");
         colarr.add(namecol);
-        // Value column
+        // Value attribute
         JsonObjectBuilder valcol = Json.createObjectBuilder();
-        valcol.add("name", "addedColumn2");
+        valcol.add("name", "addedAttribute2");
         valcol.add("type", "REAL");
         colarr.add(valcol);
         JsonArray dataObject = colarr.build();
@@ -190,7 +190,7 @@ public class CollectionRessourceTest {
         Response response = target.request(MediaType.APPLICATION_JSON).put(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testAddColumns---");
+            System.out.println("---testAddAttributes---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -202,23 +202,23 @@ public class CollectionRessourceTest {
     }
 
     /**
-     * Tests the adding of additional columns
+     * Tests the adding of additional attributes
      *
      * @return true if response states no changes done
      */
-    public boolean testAddGeoColumns() {
+    public boolean testAddGeoAttributes() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("addColumns")
+                .path("addAttributes")
                 .queryParam("storage", STORAGE);
 
         JsonArrayBuilder colarr = Json.createArrayBuilder();
-        // Name column
+        // Name attribute
         JsonObjectBuilder pointcol = Json.createObjectBuilder();
-        pointcol.add("name", "addedGeoColumn1");
+        pointcol.add("name", "addedGeoAttribute1");
         pointcol.add("type", "geometry(Point,4326)");
         colarr.add(pointcol);
         JsonArray dataObject = colarr.build();
@@ -227,7 +227,7 @@ public class CollectionRessourceTest {
         Response response = target.request(MediaType.APPLICATION_JSON).put(coldef);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testAddGeoColumns---");
+            System.out.println("---testAddGeoAttributes---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -239,22 +239,22 @@ public class CollectionRessourceTest {
     }
 
     /**
-     * Testing getting information about geo columns
+     * Testing getting information about geo attributes
      *
      * @return
      */
-    public boolean testGetGeoColumns() {
+    public boolean testGetGeoAttributes() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("getColumns")
+                .path("getAttributes")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testGetGeoColumns---");
+            System.out.println("---testGetGeoAttributes---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -265,7 +265,7 @@ public class CollectionRessourceTest {
         JsonArray listArr = responseObj.getJsonArray("list");
         for (int i = 0; i < listArr.size(); i++) {
             JsonObject curObj = (JsonObject) listArr.get(i);
-            if (curObj.getString("name").equals("addedGeoColumn1")) {
+            if (curObj.getString("name").equals("addedGeoAttribute1")) {
                 String type = curObj.getString("type");
                 if (!type.equalsIgnoreCase("geometry")) {
                     System.out.println("Expected >geometry< but was >" + type + "<");
@@ -282,7 +282,7 @@ public class CollectionRessourceTest {
     }
 
     /**
-     * Tests the adding of additional columns
+     * Tests the adding of additional attributes
      *
      * @return true if response states no changes done
      */
@@ -292,13 +292,13 @@ public class CollectionRessourceTest {
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("changeColumn")
+                .path("changeAttribute")
                 .queryParam("storage", STORAGE);
 
         JsonArrayBuilder colarr = Json.createArrayBuilder();
-        // Name column
+        // Name attribute
         JsonObjectBuilder pointcol = Json.createObjectBuilder();
-        pointcol.add("name", "addedGeoColumn1");
+        pointcol.add("name", "addedGeoAttribute1");
         pointcol.add("srid", "3857");
         colarr.add(pointcol);
         JsonArray dataObject = colarr.build();
@@ -314,7 +314,7 @@ public class CollectionRessourceTest {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             // Request 
             WebTarget targetCheck = webTarget.path("testcol")
-                    .path("getColumns")
+                    .path("getAttributes")
                     .queryParam("storage", STORAGE);
             Response responseCheck = targetCheck.request(MediaType.APPLICATION_JSON).get();
             String responseTextCheck = responseCheck.readEntity(String.class);
@@ -330,7 +330,7 @@ public class CollectionRessourceTest {
             JsonArray listArr = responseObj.getJsonArray("list");
             for (int i = 0; i < listArr.size(); i++) {
                 JsonObject curObj = (JsonObject) listArr.get(i);
-                if (curObj.getString("name").equals("addedGeoColumn1")) {
+                if (curObj.getString("name").equals("addedGeoAttribute1")) {
                     String type = curObj.getString("type");
                     if (!type.equalsIgnoreCase("geometry")) {
                         System.out.println("Expected >geometry< but was >" + type + "<");

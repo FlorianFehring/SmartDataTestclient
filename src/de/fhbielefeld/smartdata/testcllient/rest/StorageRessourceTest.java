@@ -36,7 +36,7 @@ public class StorageRessourceTest {
         }
 
         WebTarget target = webTarget.path("create")
-                .queryParam("storage", STORAGE);
+                .queryParam("name", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).post(null);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -62,7 +62,7 @@ public class StorageRessourceTest {
         }
 
         WebTarget target = webTarget.path("create")
-                .queryParam("storage", STORAGE);
+                .queryParam("name", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).post(null);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -88,7 +88,7 @@ public class StorageRessourceTest {
         }
 
         WebTarget target = webTarget.path("getCollections")
-                .queryParam("storage", STORAGE);
+                .queryParam("name", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -114,7 +114,7 @@ public class StorageRessourceTest {
         }
 
         WebTarget target = webTarget.path("getCollectionss")
-                .queryParam("storage", STORAGE);
+                .queryParam("name", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -140,7 +140,7 @@ public class StorageRessourceTest {
         }
 
         WebTarget target = webTarget.path("delete")
-                .queryParam("storage", STORAGE);
+                .queryParam("name", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).delete();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {

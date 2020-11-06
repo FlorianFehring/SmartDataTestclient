@@ -246,7 +246,7 @@ public class RecordsRessourceTest {
      */
     public boolean testGetSetsSimple() {
         if (webTarget == null) {
-            System.out.println("WebTarget is null! Änderung?");
+            System.out.println("WebTarget is null!");
         }
 
         WebTarget target = webTarget.path("testcol")
@@ -277,6 +277,84 @@ public class RecordsRessourceTest {
         }
     }
 
+    /**
+     * Test get multiple sets from not existing collection
+     *
+     * @return
+     */
+    public boolean testGetSetsNotExists() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("notexistingtable")
+                .queryParam("storage", STORAGE);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsNotExists---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.INTERNAL_SERVER_ERROR.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray errorsArr = responseObj.getJsonArray("errors");
+            if (errorsArr == null) {
+                System.out.println(">errors< attribute is missing.");
+                return false;
+            }
+            String errStr = errorsArr.getString(0);
+            if (!errorsArr.getString(0).contains("does not exists.")) {
+                System.out.println("Expected >does not exists.< but is: " + errStr);
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+   /**
+     * Test get multiple sets with negative limit
+     *
+     * @return
+     */
+    public boolean testGetSetsNegativeLimit() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("size", -10);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsNegativeLimit---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 4) {
+                System.out.println("Expected that there are 4 datasets, but there where " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Test updateing a simple dataset
      *

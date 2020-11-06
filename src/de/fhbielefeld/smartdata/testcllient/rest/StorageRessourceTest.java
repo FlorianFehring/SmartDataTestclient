@@ -30,6 +30,32 @@ public class StorageRessourceTest {
      *
      * @return true if the storage could be created
      */
+    public boolean testGetAbilities() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget.path("getAbilities")
+                .queryParam("name", STORAGE);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetAbilities---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Test create a storage
+     *
+     * @return true if the storage could be created
+     */
     public boolean testCreateStorage() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");

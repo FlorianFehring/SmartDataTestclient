@@ -34,6 +34,7 @@ public class SmartDataTestCllient {
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         StorageRessourceTest brt = new StorageRessourceTest();
+        builder.add("testGetAbilities", brt.testGetAbilities());
         builder.add("testCreateStorage", brt.testCreateStorage());
         builder.add("testCreateStorageAllreadyExists", brt.testCreateStorageAllreadyExists());
         builder.add("testGetCollectionsNoOne", brt.testGetCollectionsNoOne());

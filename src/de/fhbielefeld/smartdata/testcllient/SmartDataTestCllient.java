@@ -52,6 +52,8 @@ public class SmartDataTestCllient {
         builder.add("testGetSetSimple", rrt.testGetSetSimple());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
         builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
+        builder.add("testGetSetsLimit", rrt.testGetSetsLimit());
+        builder.add("testGetSetsNegativeLimit", rrt.testGetSetsNegativeLimit());
         builder.add("testGetSetsNotExists", rrt.testGetSetsNotExists());
         builder.add("testGetSetsWithExistingInclude",rrt.testGetSetsWithExistingInclude());
         builder.add("testGetSetsWithExistingIncludes",rrt.testGetSetsWithExistingIncludes());

@@ -316,6 +316,45 @@ public class RecordsRessourceTest {
         }
     }
 
+   /**
+     * Test get multiple sets with limit
+     *
+     * @return
+     */
+    public boolean testGetSetsLimit() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("size", 2);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsLimit---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 datasets, but there where " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Test get multiple sets with negative limit
      *

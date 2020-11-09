@@ -51,7 +51,7 @@ public class RecordsRessourceTest {
         builder.add("name", "testwert");
         builder.add("float_value", 12.2323);
         builder.add("int_value", 12);
-        builder.add("ts_value","2011-12-30T10:15:30");
+        builder.add("ts_value", "2011-12-30T10:15:30");
         JsonObject dataObject = builder.build();
         Entity<String> collectiondef = Entity.json(dataObject.toString());
 
@@ -123,7 +123,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test createing multiple sets at once
      *
@@ -143,7 +143,7 @@ public class RecordsRessourceTest {
         job1.add("name", "testwert1");
         job1.add("float_value", 12.2323);
         job1.add("int_value", 12);
-        job1.add("ts_value","31.12.2019 12:14");
+        job1.add("ts_value", "31.12.2019 12:14");
         jab.add(job1);
         JsonObjectBuilder job2 = Json.createObjectBuilder();
         job2.add("name", "testwert2");
@@ -155,7 +155,7 @@ public class RecordsRessourceTest {
         job3.add("name", "testwert3");
         job3.add("float_value", 42.0);
         job3.add("int_value", 42);
-        job3.add("ts_value","2011-12-30 10:15:30.123");
+        job3.add("ts_value", "2011-12-30 10:15:30.123");
         jab.add(job3);
         JsonArray dataObject = jab.build();
         Entity<String> collectiondef = Entity.json(dataObject.toString());
@@ -199,7 +199,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests if values with unicode chars can be inserted. Note: If this does
      * not succseed the problem can be, that the underliyng database is not UTF8
@@ -315,8 +315,8 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
-   /**
+
+    /**
      * Test get multiple sets with negative limit
      *
      * @return
@@ -354,7 +354,147 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
+    /**
+     * Test get multiple sets with includes one given attribute
+     *
+     * @return
+     */
+    public boolean testGetSetsWithExistingInclude() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("includes", "name");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsWithExistingInclude---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            for (int i = 0; i < recordsArr.size(); i++) {
+                JsonObject curObj = recordsArr.getJsonObject(i);
+                if (!curObj.containsKey("name")) {
+                    System.out.println(">name< attribute not found in result.");
+                    return false;
+                }
+                if (curObj.containsKey("int_value")) {
+                    System.out.println(">int_value< attribute was found in result but should not be there.");
+                    return false;
+                }
+                // Test for attr that should not be existend
+                if (curObj.containsKey("float_value")) {
+                    System.out.println(">float_value< attribute was found in result but should not be there.");
+                    return false;
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test get multiple sets with includes given attributes
+     *
+     * @return
+     */
+    public boolean testGetSetsWithExistingIncludes() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("includes", "name,int_value");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsWithExistingIncludes---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            for (int i = 0; i < recordsArr.size(); i++) {
+                JsonObject curObj = recordsArr.getJsonObject(i);
+                if (!curObj.containsKey("name")) {
+                    System.out.println(">name< attribute not found in result.");
+                    return false;
+                }
+                if (!curObj.containsKey("int_value")) {
+                    System.out.println(">int_value< attribute not found in result.");
+                    return false;
+                }
+                // Test for attr that should not be existend
+                if (curObj.containsKey("float_value")) {
+                    System.out.println(">float_value< attribute was found in result but should not be there.");
+                    return false;
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test get multiple sets with includes where the given attribute does not
+     * exists
+     *
+     * @return
+     */
+    public boolean testGetSetsWithNotExistingInclude() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("includes", "notexattribute");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsWithNotExistingInclude---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            if (!responseObj.containsKey("warnings")) {
+                System.out.println(">warning< for not existing attribute is missing.");
+                return false;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Test updateing a simple dataset
      *
@@ -405,26 +545,26 @@ public class RecordsRessourceTest {
                 .queryParam("storage", STORAGE);
         JsonArrayBuilder sets = Json.createArrayBuilder();
         JsonObjectBuilder set1 = Json.createObjectBuilder();
-        set1.add("id",1);
+        set1.add("id", 1);
         set1.add("name", "neuer testwert id 1");
         set1.add("float_value", 0.3333);
         set1.add("int_value", 0);
         sets.add(set1);
         JsonObjectBuilder set2 = Json.createObjectBuilder();
-        set2.add("id",2);
+        set2.add("id", 2);
         set2.add("name", "neuer testwert id 2");
         set2.add("float_value", 0.3333);
         set2.add("int_value", 0);
         sets.add(set2);
         JsonObjectBuilder set3 = Json.createObjectBuilder();
-        set3.add("id",3);
+        set3.add("id", 3);
         set3.add("name", "neuer testwert id 3");
         set3.add("float_value", 0.3333);
         set3.add("int_value", 0);
         sets.add(set3);
         JsonObjectBuilder env = Json.createObjectBuilder();
         env.add("records", sets);
-        
+
         Entity<String> coldef = Entity.json(env.build().toString());
 
         Response response = target.request(MediaType.APPLICATION_JSON).put(coldef);
@@ -440,17 +580,17 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test the deletion of an dataset
-     * 
+     *
      * @return true if the dataset was deleted
      */
     public boolean testDeleteSet() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
-        
+
         // Delete dataset one
         WebTarget target = webTarget
                 .path("testcol")
@@ -470,17 +610,17 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test the deletion of multiple datasets
-     * 
+     *
      * @return true if the dataset was deleted
      */
     public boolean testDeleteSets() {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
-        
+
         // Delete dataset one
         WebTarget target = webTarget
                 .path("testcol")

@@ -58,6 +58,9 @@ public class SmartDataTestCllient {
         builder.add("testGetSetsWithExistingInclude",rrt.testGetSetsWithExistingInclude());
         builder.add("testGetSetsWithExistingIncludes",rrt.testGetSetsWithExistingIncludes());
         builder.add("testGetSetsWithNotExistingInclude",rrt.testGetSetsWithNotExistingInclude());
+        builder.add("testGetSetsWithOrderDESC",rrt.testGetSetsWithOrderDESC());
+        builder.add("testGetSetsWithOrderASC",rrt.testGetSetsWithOrderASC());
+        builder.add("testGetSetsWithNotExistingOrder",rrt.testGetSetsWithNotExistingOrder());
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());
         builder.add("testUpdateSetsSimple", rrt.testUpdateSetsSimple());

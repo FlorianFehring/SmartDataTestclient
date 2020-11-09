@@ -535,6 +535,126 @@ public class RecordsRessourceTest {
     }
 
     /**
+     * Test get multiple sets with default (descending) order
+     *
+     * @return
+     */
+    public boolean testGetSetsWithOrderDESC() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("order", "int_value");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsWithOrderDESC---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            int maxval = 99999;
+            for (int i = 0; i < recordsArr.size(); i++) {
+                JsonObject curObj = recordsArr.getJsonObject(i);
+                int intval = curObj.getInt("int_value");
+                if(intval > maxval) {
+                    System.out.println(">" + intval + "< is less than >" + maxval + "< expected to be bigger.");
+                    return false;
+                }
+                maxval = intval;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Test get multiple sets with ascending order
+     *
+     * @return
+     */
+    public boolean testGetSetsWithOrderASC() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("order", "int_value,asc");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsWithOrderASC---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            int minval = -99999;
+            for (int i = 0; i < recordsArr.size(); i++) {
+                JsonObject curObj = recordsArr.getJsonObject(i);
+                int intval = curObj.getInt("int_value");
+                if(intval < minval) {
+                    System.out.println(">" + intval + "< is less than >" + minval + "< expected to be bigger.");
+                    return false;
+                }
+                minval = intval;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Test get multiple sets with order where the given attribute does not
+     * exists
+     *
+     * @return
+     */
+    public boolean testGetSetsWithNotExistingOrder() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("order", "notexattribute");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsWithNotExistingOrder---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            if (!responseObj.containsKey("warnings")) {
+                System.out.println(">warning< for not existing attribute is missing.");
+                return false;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Test updateing a simple dataset
      *
      * @return true if dataset was updated

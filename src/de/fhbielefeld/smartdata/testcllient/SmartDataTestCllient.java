@@ -61,6 +61,11 @@ public class SmartDataTestCllient {
         builder.add("testGetSetsWithOrderDESC",rrt.testGetSetsWithOrderDESC());
         builder.add("testGetSetsWithOrderASC",rrt.testGetSetsWithOrderASC());
         builder.add("testGetSetsWithNotExistingOrder",rrt.testGetSetsWithNotExistingOrder());
+        // Tests with filter
+        builder.add("testEQFilterFound",rrt.testEQFilterFound());
+        builder.add("testEQFilterNotFound",rrt.testEQFilterNotFound());
+        builder.add("testEQFilterMissingColumn",rrt.testEQFilterMissingAttribute());
+        // Additional tests
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());
         builder.add("testUpdateSetsSimple", rrt.testUpdateSetsSimple());

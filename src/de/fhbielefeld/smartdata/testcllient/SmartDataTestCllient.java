@@ -83,6 +83,12 @@ public class SmartDataTestCllient {
         builder.add("testNSWFilterFound",rrt.testNSWFilterFound());
         builder.add("testNSWFilterNotFound",rrt.testNSWFilterNotFound());
         builder.add("testNSWFilterMissingColumn",rrt.testNSWFilterMissingAttribute());
+        //Tests with ends with filter
+        builder.add("testEWFilterFound",rrt.testEWFilterFound());
+        builder.add("testEWFilterNotFound",rrt.testEWFilterNotFound());
+        builder.add("testEWFilterMissingColumn",rrt.testEWFilterMissingAttribute());
+        builder.add("testNEWFilterFound",rrt.testNEWFilterFound());
+        builder.add("testNEWFilterMissingColumn",rrt.testNEWFilterMissingAttribute());
         // Additional tests
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());

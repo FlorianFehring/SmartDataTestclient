@@ -67,6 +67,7 @@ public class SmartDataTestCllient {
         builder.add("testEQFilterNotFound",rrt.testEQFilterNotFound());
         builder.add("testEQFilterMissingColumn",rrt.testEQFilterMissingAttribute());
         builder.add("testNEQFilterFound",rrt.testNEQFilterFound());
+        builder.add("testNEQFilterNotFound",rrt.testNEQFilterNotFound());
         builder.add("testNEQFilterMissingColumn",rrt.testNEQFilterMissingAttribute());
         //Tests with starts with filter
         builder.add("testSWFilterFound",rrt.testSWFilterFound());

@@ -175,32 +175,6 @@ public class RecordsRessourceTest {
     }
 
     /**
-     * Tests to get a simple dataset
-     *
-     * @return
-     */
-    public boolean testEqualsFilter() {
-        if (webTarget == null) {
-            System.out.println("WebTarget is null! Änderung?");
-        }
-
-        WebTarget target = webTarget.path("testcol")
-                .queryParam("storage", STORAGE);
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
-        String responseText = response.readEntity(String.class);
-        if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testEqualsFilter---");
-            System.out.println(response.getStatusInfo());
-            System.out.println(responseText);
-        }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Tests if values with unicode chars can be inserted. Note: If this does
      * not succseed the problem can be, that the underliyng database is not UTF8
      * encoded.
@@ -897,6 +871,73 @@ public class RecordsRessourceTest {
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testEQFilterMissingColumn---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.BAD_REQUEST.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a negative equals filter
+     *
+     * @return
+     */
+    public boolean testNEQFilterFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "name,neq,testwert");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testNEQFilter---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 3) {
+                System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a negative filter on non existend column
+     *
+     * @return
+     */
+    public boolean testNEQFilterMissingAttribute() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "notexisting,neq,testwert2");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testNEQFilterMissingColumn---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }

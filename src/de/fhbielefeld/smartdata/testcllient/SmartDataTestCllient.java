@@ -110,6 +110,13 @@ public class SmartDataTestCllient {
         builder.add("testNGEFilterFound",rrt.testNGEFilterFound());
         builder.add("testNGEFilterNotFound",rrt.testNGEFilterNotFound());
         builder.add("testNGEFilterMissingColumn",rrt.testNGEFilterMissingAttribute());
+        //Tests with greater than filter
+        builder.add("testGTFilterFound",rrt.testGTFilterFound());
+        builder.add("testGTFilterNotFound",rrt.testGTFilterNotFound());
+        builder.add("testGTFilterMissingColumn",rrt.testGTFilterMissingAttribute());
+        builder.add("testNGTFilterFound",rrt.testNGTFilterFound());
+        builder.add("testNGTFilterNotFound",rrt.testNGTFilterNotFound());
+        builder.add("testNGTFilterMissingColumn",rrt.testNGTFilterMissingAttribute());
         // Additional tests
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());

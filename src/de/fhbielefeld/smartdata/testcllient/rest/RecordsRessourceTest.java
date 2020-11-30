@@ -2659,4 +2659,44 @@ public class RecordsRessourceTest {
             return false;
         }
     }
+    
+    /**
+     * Tests to get a dataset using a between filter with timestamp values
+     *
+     * @return
+     */
+    public boolean testBTFilterTimestamp() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "ts_value,bt,2011-12-29T10:15:30,2013-12-30T10:15:30");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testBTFilterTimestamp---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 3) {
+                System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -124,6 +124,7 @@ public class SmartDataTestCllient {
         builder.add("testNBTFilterFound",rrt.testNBTFilterFound());
         builder.add("testNBTFilterNotFound",rrt.testNBTFilterNotFound());
         builder.add("testNBTFilterMissingColumn",rrt.testNBTFilterMissingAttribute());
+        builder.add("testBTFilterTimestamp",rrt.testBTFilterTimestamp());
         // Additional tests
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());

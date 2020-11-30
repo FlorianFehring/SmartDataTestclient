@@ -51,6 +51,7 @@ public class RecordsRessourceTest {
         builder.add("name", "testwert");
         builder.add("float_value", 12.2323);
         builder.add("int_value", 12);
+        builder.add("bool_value", true);
         builder.add("ts_value", "2011-12-30T10:15:30");
         JsonObject dataObject = builder.build();
         Entity<String> collectiondef = Entity.json(dataObject.toString());
@@ -143,18 +144,21 @@ public class RecordsRessourceTest {
         job1.add("name", "testwert1");
         job1.add("float_value", 12.2323);
         job1.add("int_value", 12);
+        job1.add("bool_value", true);
         job1.add("ts_value", "31.12.2019 12:14");
         jab.add(job1);
         JsonObjectBuilder job2 = Json.createObjectBuilder();
         job2.add("name", "testwert2");
         job2.add("float_value", -11.1111);
         job2.add("int_value", -11);
+        job2.add("bool_value", false);
         job2.add("ts_value", "2013-12-30T10:15:30");
         jab.add(job2);
         JsonObjectBuilder job3 = Json.createObjectBuilder();
         job3.add("name", "testwert3");
         job3.add("float_value", 42.0);
         job3.add("int_value", 42);
+        job3.add("bool_value", true);
         job3.add("ts_value", "2011-12-30 10:15:30.123");
         jab.add(job3);
         JsonArray dataObject = jab.build();
@@ -671,6 +675,7 @@ public class RecordsRessourceTest {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "neuer testwert");
         builder.add("float_value", 0.3333);
+        builder.add("boolean_value", false);
         builder.add("int_value", 0);
         JsonObject dataObject = builder.build();
         Entity<String> coldef = Entity.json(dataObject.toString());
@@ -707,12 +712,14 @@ public class RecordsRessourceTest {
         set1.add("id", 1);
         set1.add("name", "neuer testwert id 1");
         set1.add("float_value", 0.3333);
+        set1.add("boolean_value", false);
         set1.add("int_value", 0);
         sets.add(set1);
         JsonObjectBuilder set2 = Json.createObjectBuilder();
         set2.add("id", 2);
         set2.add("name", "neuer testwert id 2");
         set2.add("float_value", 0.3333);
+        set2.add("boolean_value", false);
         set2.add("int_value", 0);
         sets.add(set2);
         JsonObjectBuilder set3 = Json.createObjectBuilder();
@@ -720,6 +727,7 @@ public class RecordsRessourceTest {
         set3.add("name", "neuer testwert id 3");
         set3.add("float_value", 0.3333);
         set3.add("int_value", 0);
+        set3.add("boolean_value", false);
         sets.add(set3);
         JsonObjectBuilder env = Json.createObjectBuilder();
         env.add("records", sets);
@@ -817,6 +825,46 @@ public class RecordsRessourceTest {
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testEQFilter---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there where " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset useing an equals filter
+     *
+     * @return
+     */
+    public boolean testEQFilterBoolean() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "bool_value,eq,false");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testEQFilterBoolean---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }

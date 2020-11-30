@@ -3,6 +3,7 @@ package de.fhbielefeld.smartdata.testcllient;
 import de.fhbielefeld.smartdata.testcllient.rest.StorageRessourceTest;
 import de.fhbielefeld.smartdata.testcllient.rest.RecordsRessourceTest;
 import de.fhbielefeld.smartdata.testcllient.rest.CollectionRessourceTest;
+import de.fhbielefeld.smartdata.testcllient.rest.RecordsPerformanceTest;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,12 +64,19 @@ public class SmartDataTestCllient {
         builder.add("testGetSetsWithNotExistingOrder",rrt.testGetSetsWithNotExistingOrder());
         // Tests with filter
         builder.add("testEQFilterFound",rrt.testEQFilterFound());
+        builder.add("testEQFilterBoolean",rrt.testEQFilterBoolean());
         builder.add("testEQFilterNotFound",rrt.testEQFilterNotFound());
         builder.add("testEQFilterMissingColumn",rrt.testEQFilterMissingAttribute());
         // Additional tests
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());
         builder.add("testUpdateSetsSimple", rrt.testUpdateSetsSimple());
+        // Performance mesurement
+        RecordsPerformanceTest rpt = new RecordsPerformanceTest();
+        builder.add("testCreateSetUnicode", rpt.performanceCreateSetSimple());
+        builder.add("testUpdateSetSimple", rpt.performanceGetSetSimple());
+        builder.add("testUpdateSetsSimple", rpt.performanceGetSetsSimple());
+        // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());
 

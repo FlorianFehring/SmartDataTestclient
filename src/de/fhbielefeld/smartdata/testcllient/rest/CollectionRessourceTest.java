@@ -58,7 +58,7 @@ public class CollectionRessourceTest {
         // Float value column
         JsonObjectBuilder floatcol = Json.createObjectBuilder();
         floatcol.add("name", "float_value");
-        floatcol.add("type", "REAL");
+        floatcol.add("type", "FLOAT");
         colarr.add(floatcol);
         // Int value column
         JsonObjectBuilder intcol = Json.createObjectBuilder();
@@ -117,7 +117,7 @@ public class CollectionRessourceTest {
         // Value column
         JsonObjectBuilder valcol = Json.createObjectBuilder();
         valcol.add("name", "value");
-        valcol.add("type", "REAL");
+        valcol.add("type", "FLOAT");
         colarr.add(valcol);
         builder.add("attributes", colarr);
         JsonObject dataObject = builder.build();
@@ -187,7 +187,7 @@ public class CollectionRessourceTest {
         // Value attribute
         JsonObjectBuilder valcol = Json.createObjectBuilder();
         valcol.add("name", "addedAttribute2");
-        valcol.add("type", "REAL");
+        valcol.add("type", "FLOAT");
         colarr.add(valcol);
         JsonArray dataObject = colarr.build();
         Entity<String> coldef = Entity.json(dataObject.toString());

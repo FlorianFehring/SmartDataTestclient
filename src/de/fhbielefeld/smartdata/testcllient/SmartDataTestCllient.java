@@ -62,18 +62,22 @@ public class SmartDataTestCllient {
         builder.add("testGetSetsWithOrderDESC",rrt.testGetSetsWithOrderDESC());
         builder.add("testGetSetsWithOrderASC",rrt.testGetSetsWithOrderASC());
         builder.add("testGetSetsWithNotExistingOrder",rrt.testGetSetsWithNotExistingOrder());
+        // Unicode support tests
+        builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
+        builder.add("testGetSetUnicode", rrt.testGetSetUnicode());
+        
         // Tests with filter
-        builder.add("testEQFilterFound",rrt.testEQFilterFound());
+        builder.add("testEQFilterString",rrt.testEQFilterString());
+        builder.add("testEQFilterFloat",rrt.testEQFilterFloat());
         builder.add("testEQFilterBoolean",rrt.testEQFilterBoolean());
         builder.add("testEQFilterNotFound",rrt.testEQFilterNotFound());
         builder.add("testEQFilterMissingColumn",rrt.testEQFilterMissingAttribute());
         // Additional tests
-        builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());
         builder.add("testUpdateSetsSimple", rrt.testUpdateSetsSimple());
         // Performance mesurement
         RecordsPerformanceTest rpt = new RecordsPerformanceTest();
-        builder.add("testCreateSetUnicode", rpt.performanceCreateSetSimple());
+        builder.add("performanceCreateSetSimple", rpt.performanceCreateSetSimple());
         builder.add("testUpdateSetSimple", rpt.performanceGetSetSimple());
         builder.add("testUpdateSetsSimple", rpt.performanceGetSetsSimple());
         // Test deletion

@@ -49,7 +49,7 @@ public class RecordsRessourceTest {
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testwert");
-        builder.add("float_value", 12.2323);
+        builder.add("float_value", 12.23);
         builder.add("int_value", 12);
         builder.add("bool_value", true);
         builder.add("ts_value", "2011-12-30T10:15:30");
@@ -95,6 +95,33 @@ public class RecordsRessourceTest {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Tests to get a dataset with unicode data
+     *
+     * @return
+     */
+    public boolean testGetSetUnicode() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetUnicode---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            if (!responseText.contains("?")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -223,8 +250,8 @@ public class RecordsRessourceTest {
         JsonArrayBuilder jab = Json.createArrayBuilder();
         JsonObjectBuilder job1 = Json.createObjectBuilder();
         job1.add("name", "Oława - Żołnierzy");
-        job1.add("float_value", 99.999);
-        job1.add("int_value", 99);
+        job1.add("float_value", 88.888);
+        job1.add("int_value", 88);
         jab.add(job1);
         JsonArray dataObject = jab.build();
         Entity<String> coldef = Entity.json(dataObject.toString());
@@ -320,7 +347,7 @@ public class RecordsRessourceTest {
         }
     }
 
-   /**
+    /**
      * Test get multiple sets with limit
      *
      * @return
@@ -358,7 +385,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test get multiple sets with negative limit
      *
@@ -567,7 +594,7 @@ public class RecordsRessourceTest {
             for (int i = 0; i < recordsArr.size(); i++) {
                 JsonObject curObj = recordsArr.getJsonObject(i);
                 int intval = curObj.getInt("int_value");
-                if(intval > maxval) {
+                if (intval > maxval) {
                     System.out.println(">" + intval + "< is less than >" + maxval + "< expected to be bigger.");
                     return false;
                 }
@@ -579,7 +606,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test get multiple sets with ascending order
      *
@@ -609,7 +636,7 @@ public class RecordsRessourceTest {
             for (int i = 0; i < recordsArr.size(); i++) {
                 JsonObject curObj = recordsArr.getJsonObject(i);
                 int intval = curObj.getInt("int_value");
-                if(intval < minval) {
+                if (intval < minval) {
                     System.out.println(">" + intval + "< is less than >" + minval + "< expected to be bigger.");
                     return false;
                 }
@@ -621,7 +648,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test get multiple sets with order where the given attribute does not
      * exists
@@ -657,7 +684,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test updateing a simple dataset
      *
@@ -807,13 +834,13 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset useing an equals filter
      *
      * @return
      */
-    public boolean testEQFilterFound() {
+    public boolean testEQFilterString() {
         if (webTarget == null) {
             System.out.println("WebTarget is null! Änderung?");
         }
@@ -824,7 +851,7 @@ public class RecordsRessourceTest {
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testEQFilter---");
+            System.out.println("---testEQFilterString---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -847,7 +874,47 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
+    /**
+     * Tests to get a dataset useing an equals filter with double value
+     *
+     * @return
+     */
+    public boolean testEQFilterFloat() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "float_value,eq,-11.1111");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testEQFilterFloat---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there where " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Tests to get a dataset useing an equals filter
      *
@@ -887,7 +954,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset useing an equals filter
      *
@@ -927,7 +994,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset useing equals filter on non existend column
      *

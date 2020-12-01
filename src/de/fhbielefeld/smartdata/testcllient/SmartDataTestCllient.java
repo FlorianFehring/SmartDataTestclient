@@ -2,7 +2,7 @@ package de.fhbielefeld.smartdata.testcllient;
 
 import de.fhbielefeld.smartdata.testcllient.rest.StorageRessourceTest;
 import de.fhbielefeld.smartdata.testcllient.rest.RecordsRessourceTest;
-import de.fhbielefeld.smartdata.testcllient.rest.CollectionRessourceTest;   
+import de.fhbielefeld.smartdata.testcllient.rest.CollectionRessourceTest;
 import de.fhbielefeld.smartdata.testcllient.rest.RecordsPerformanceTest;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -62,9 +62,13 @@ public class SmartDataTestCllient {
         builder.add("testGetSetsWithOrderDESC",rrt.testGetSetsWithOrderDESC());
         builder.add("testGetSetsWithOrderASC",rrt.testGetSetsWithOrderASC());
         builder.add("testGetSetsWithNotExistingOrder",rrt.testGetSetsWithNotExistingOrder());
+        // Unicode support tests
+        builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
+        builder.add("testGetSetUnicode", rrt.testGetSetUnicode());
+        
         // Tests with filter
-        //Tests with equal filter
-        builder.add("testEQFilterFound",rrt.testEQFilterFound());
+        builder.add("testEQFilterString",rrt.testEQFilterString());
+        builder.add("testEQFilterFloat",rrt.testEQFilterFloat());
         builder.add("testEQFilterBoolean",rrt.testEQFilterBoolean());
         builder.add("testEQFilterNotFound",rrt.testEQFilterNotFound());
         builder.add("testEQFilterMissingColumn",rrt.testEQFilterMissingAttribute());
@@ -143,7 +147,6 @@ public class SmartDataTestCllient {
         builder.add("testNISFilterFound",rrt.testNISFilterFound());
         builder.add("testNISFilterMissingColumn",rrt.testNISFilterMissingAttribute());
         // Additional tests
-        builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());
         builder.add("testUpdateSetsSimple", rrt.testUpdateSetsSimple());
         // Performance mesurement

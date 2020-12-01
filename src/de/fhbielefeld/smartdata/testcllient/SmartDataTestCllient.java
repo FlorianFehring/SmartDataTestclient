@@ -134,6 +134,12 @@ public class SmartDataTestCllient {
         builder.add("testINilterTimestamp",rrt.testINFilterTimestamp());
         builder.add("testINilterString",rrt.testINFilterString());
         builder.add("testINilterDouble",rrt.testINFilterDouble());
+        //Tests with is null filter
+        builder.add("testISFilterFound",rrt.testISFilterFound());
+        builder.add("testISFilterNotFound",rrt.testISFilterNotFound());
+        builder.add("testISFilterMissingColumn",rrt.testISFilterMissingAttribute());
+        builder.add("testNISFilterFound",rrt.testNISFilterFound());
+        builder.add("testNISFilterMissingColumn",rrt.testNISFilterMissingAttribute());
         // Additional tests
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());

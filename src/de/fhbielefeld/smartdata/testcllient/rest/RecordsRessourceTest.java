@@ -50,7 +50,7 @@ public class RecordsRessourceTest {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testwert");
         builder.add("float_value", 12.2323);
-        builder.add("int_value", 42);
+        builder.add("int_value", 12);
         builder.add("ts_value", "2011-12-30T10:15:30");
         JsonObject dataObject = builder.build();
         Entity<String> collectiondef = Entity.json(dataObject.toString());
@@ -142,13 +142,13 @@ public class RecordsRessourceTest {
         JsonObjectBuilder job1 = Json.createObjectBuilder();
         job1.add("name", "testwert1");
         job1.add("float_value", 12.2323);
-        job1.add("int_value", 42);
+        job1.add("int_value", 12);
         job1.add("ts_value", "31.12.2019 12:14");
         jab.add(job1);
         JsonObjectBuilder job2 = Json.createObjectBuilder();
         job2.add("name", "testwert2");
         job2.add("float_value", -11.1111);
-        job2.add("int_value", 42);
+        job2.add("int_value", -11);
         job2.add("ts_value", "2013-12-30T10:15:30");
         jab.add(job2);
         JsonObjectBuilder job3 = Json.createObjectBuilder();
@@ -882,7 +882,7 @@ public class RecordsRessourceTest {
     }
     
     /**
-     * Tests to get a dataset using a negative equals filter
+     * Tests to get a dataset using a not equals filter
      *
      * @return
      */
@@ -922,47 +922,7 @@ public class RecordsRessourceTest {
     }
     
     /**
-     * Tests to get a dataset using a negative equals filter
-     *
-     * @return
-     */
-    public boolean testNEQFilterNotFound() {
-        if (webTarget == null) {
-            System.out.println("WebTarget is null! Änderung?");
-        }
-
-        WebTarget target = webTarget.path("testcol")
-                .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,neq,42");
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
-        String responseText = response.readEntity(String.class);
-        if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testNEQNotFilter---");
-            System.out.println(response.getStatusInfo());
-            System.out.println(responseText);
-        }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            // There should be one dataset
-            JsonParser parser = Json.createParser(new StringReader(responseText));
-            parser.next();
-            JsonObject responseObj = parser.getObject();
-            JsonArray recordsArr = responseObj.getJsonArray("records");
-            if (recordsArr == null) {
-                System.out.println(">records< attribute is missing.");
-                return false;
-            }
-            if (recordsArr.size() != 0) {
-                System.out.println("Expected that there are 0 dataset, but there were " + recordsArr.size());
-                return false;
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Tests to get a dataset using a negative filter on non existend column
+     * Tests to get a dataset using a not equals filter on non existend column
      *
      * @return
      */
@@ -1642,7 +1602,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,lt,2");
+                .queryParam("filter", "int_value,lt,-20");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -1856,7 +1816,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,le,2");
+                .queryParam("filter", "int_value,le,-20");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2177,7 +2137,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,nge,42");
+                .queryParam("filter", "int_value,nge,-42");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2262,8 +2222,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 4) {
-                System.out.println("Expected that there are 4 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2391,7 +2351,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,ngt,41");
+                .queryParam("filter", "int_value,ngt,-41");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2605,7 +2565,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,nbt,41,43");
+                .queryParam("filter", "int_value,nbt,-11,43");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2692,6 +2652,340 @@ public class RecordsRessourceTest {
             }
             if (recordsArr.size() != 3) {
                 System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a in filter
+     *
+     * @return
+     */
+    public boolean testINFilterFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "int_value,in,125,13,42,-11");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testINFilterFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a in filter
+     *
+     * @return
+     */
+    public boolean testINFilterNotFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "int_value,in,50,52,-35");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testINFilterNotFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (!recordsArr.isEmpty()) {
+                System.out.println("Expected that there are 0 datasets, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a in filter on non existend column
+     *
+     * @return
+     */
+    public boolean testINFilterMissingAttribute() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "notexisting,in,2,3");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testINFilterMissingColumn---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.BAD_REQUEST.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a not in filter
+     *
+     * @return
+     */
+    public boolean testNINFilterFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "int_value,nin,12,42,123");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testNINFilterFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a not in filter
+     *
+     * @return
+     */
+    public boolean testNINFilterNotFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "int_value,nin,42,12,-11");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testNINFilterNotFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (!recordsArr.isEmpty()) {
+                System.out.println("Expected that there are 0 datasets, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a not in filter on non existend column
+     *
+     * @return
+     */
+    public boolean testNINFilterMissingAttribute() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "notexisting,nin,2,2");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testNINFilterMissingColumn---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.BAD_REQUEST.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a in filter with timestamp values
+     *
+     * @return
+     */
+    public boolean testINFilterTimestamp() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "ts_value,in,2011-12-29T10:15:30,2013-12-30T10:15:30,2019-12-29T10:15:30");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testINFilterTimestamp---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a in filter with string values
+     *
+     * @return
+     */
+    public boolean testINFilterString() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "name,in,test,test2,testwert,testwert2");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testINFilterString---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a in filter with double values
+     *
+     * @return
+     */
+    public boolean testINFilterDouble() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "float_value,in,-11.1111,42.0,15.35,-68.15");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testINFilterString---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;

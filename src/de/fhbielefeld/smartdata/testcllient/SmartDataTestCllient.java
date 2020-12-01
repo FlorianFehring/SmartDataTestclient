@@ -67,7 +67,6 @@ public class SmartDataTestCllient {
         builder.add("testEQFilterNotFound",rrt.testEQFilterNotFound());
         builder.add("testEQFilterMissingColumn",rrt.testEQFilterMissingAttribute());
         builder.add("testNEQFilterFound",rrt.testNEQFilterFound());
-        builder.add("testNEQFilterNotFound",rrt.testNEQFilterNotFound());
         builder.add("testNEQFilterMissingColumn",rrt.testNEQFilterMissingAttribute());
         //Tests with contain filter
         builder.add("testCSFilterFound",rrt.testCSFilterFound());
@@ -125,6 +124,16 @@ public class SmartDataTestCllient {
         builder.add("testNBTFilterNotFound",rrt.testNBTFilterNotFound());
         builder.add("testNBTFilterMissingColumn",rrt.testNBTFilterMissingAttribute());
         builder.add("testBTFilterTimestamp",rrt.testBTFilterTimestamp());
+        //Tests with in filter
+        builder.add("testINFilterFound",rrt.testINFilterFound());
+        builder.add("testINFilterNotFound",rrt.testINFilterNotFound());
+        builder.add("testINFilterMissingColumn",rrt.testINFilterMissingAttribute());
+        builder.add("testNINFilterFound",rrt.testNINFilterFound());
+        builder.add("testNINFilterNotFound",rrt.testNINFilterNotFound());
+        builder.add("testNINFilterMissingColumn",rrt.testNINFilterMissingAttribute());
+        builder.add("testINilterTimestamp",rrt.testINFilterTimestamp());
+        builder.add("testINilterString",rrt.testINFilterString());
+        builder.add("testINilterDouble",rrt.testINFilterDouble());
         // Additional tests
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testUpdateSetSimple", rrt.testUpdateSetSimple());

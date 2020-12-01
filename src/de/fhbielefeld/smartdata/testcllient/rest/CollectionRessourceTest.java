@@ -65,6 +65,11 @@ public class CollectionRessourceTest {
         intcol.add("name", "int_value");
         intcol.add("type", "INT");
         colarr.add(intcol);
+        // Boolean cloumn
+        JsonObjectBuilder boolcol = Json.createObjectBuilder();
+        boolcol.add("name", "bool_value");
+        boolcol.add("type", "BOOLEAN");
+        colarr.add(boolcol);
         // Timestamp column
         JsonObjectBuilder tscol = Json.createObjectBuilder();
         tscol.add("name", "ts_value");

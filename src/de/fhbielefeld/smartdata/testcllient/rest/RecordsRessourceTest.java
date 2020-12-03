@@ -253,7 +253,7 @@ public class RecordsRessourceTest {
 
         JsonArrayBuilder jab = Json.createArrayBuilder();
         JsonObjectBuilder job1 = Json.createObjectBuilder();
-        job1.add("name", "Oława - Żołnierzy");
+        job1.add("name", "testwert Oława - Żołnierzy");
         job1.add("float_value", 88.888);
         job1.add("int_value", 88);
         jab.add(job1);
@@ -1056,8 +1056,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 4) {
-                System.out.println("Expected that there are 4 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 5) {
+                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1123,8 +1123,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 5) {
-                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 6) {
+                System.out.println("Expected that there are 6 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1230,8 +1230,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 5) {
-                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 6) {
+                System.out.println("Expected that there are 6 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1337,8 +1337,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 5) {
-                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 6) {
+                System.out.println("Expected that there are 6 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1444,8 +1444,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 5) {
-                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 6) {
+                System.out.println("Expected that there are 6 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1659,8 +1659,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 4) {
-                System.out.println("Expected that there are 4 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 5) {
+                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1834,8 +1834,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 1) {
-                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1856,7 +1856,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,nlt,52");
+                .queryParam("filter", "int_value,nlt,89");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2050,8 +2050,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 1) {
-                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2072,7 +2072,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,nle,52");
+                .queryParam("filter", "int_value,nle,89");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2158,8 +2158,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 1) {
-                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2180,7 +2180,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,ge,52");
+                .queryParam("filter", "int_value,ge,89");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2374,8 +2374,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 1) {
-                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2396,7 +2396,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,gt,52");
+                .queryParam("filter", "int_value,gt,88");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2696,8 +2696,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 1) {
-                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2718,7 +2718,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,nbt,-11,43");
+                .queryParam("filter", "int_value,nbt,-11,88");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -2950,8 +2950,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 1) {
-                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2972,7 +2972,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "int_value,nin,42,12,-11,0");
+                .queryParam("filter", "int_value,nin,42,12,-11,0,88");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -3284,8 +3284,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 4) {
-                System.out.println("Expected that there are 4 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 5) {
+                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;

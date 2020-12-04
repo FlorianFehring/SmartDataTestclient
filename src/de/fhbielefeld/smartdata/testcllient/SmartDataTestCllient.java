@@ -112,6 +112,7 @@ public class SmartDataTestCllient {
         builder.add("testNLEFilterMissingColumn",rrt.testNLEFilterMissingAttribute());
         //Tests with lower or equal filter
         builder.add("testGEFilterFound",rrt.testGEFilterFound());
+        builder.add("testGEFilterTimestamp",rrt.testGEFilterTimestamp());
         builder.add("testGEFilterNotFound",rrt.testGEFilterNotFound());
         builder.add("testGEFilterMissingColumn",rrt.testGEFilterMissingAttribute());
         builder.add("testNGEFilterFound",rrt.testNGEFilterFound());

@@ -120,6 +120,7 @@ public class SmartDataTestCllient {
         builder.add("testNGEFilterMissingColumn",rrt.testNGEFilterMissingAttribute());
         //Tests with greater than filter
         builder.add("testGTFilterFound",rrt.testGTFilterFound());
+        builder.add("testGTFilterTimestamp",rrt.testGTFilterTimestamp());
         builder.add("testGTFilterNotFound",rrt.testGTFilterNotFound());
         builder.add("testGTFilterMissingColumn",rrt.testGTFilterMissingAttribute());
         builder.add("testNGTFilterFound",rrt.testNGTFilterFound());

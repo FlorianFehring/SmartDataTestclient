@@ -104,6 +104,7 @@ public class SmartDataTestCllient {
         builder.add("testNLTFilterMissingColumn",rrt.testNLTFilterMissingAttribute());
         //Tests with lower or equal filter
         builder.add("testLEFilterFound",rrt.testLEFilterFound());
+        builder.add("testLEFilterTimestamp",rrt.testLEFilterTimestamp());
         builder.add("testLEFilterNotFound",rrt.testLEFilterNotFound());
         builder.add("testLEFilterMissingColumn",rrt.testLEFilterMissingAttribute());
         builder.add("testNLEFilterFound",rrt.testNLEFilterFound());

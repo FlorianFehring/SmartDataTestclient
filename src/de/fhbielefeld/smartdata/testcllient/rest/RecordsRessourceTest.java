@@ -186,7 +186,7 @@ public class RecordsRessourceTest {
         job3.add("float_value", 42.0);
         job3.add("int_value", 42);
         job3.add("bool_value", true);
-        job3.add("ts_value", "2011-12-30 10:15:30.123");
+        job3.add("ts_value", "2011-12-31 10:15:30.123");
         jab.add(job3);
         JsonObjectBuilder job4 = Json.createObjectBuilder();
         job4.add("name", "testwert_nullset");
@@ -1777,6 +1777,48 @@ public class RecordsRessourceTest {
         }
     }
 
+    /**
+     * Tests to get a dataset using two filters with timestamp value.
+     * This is the same functionallity as the between filter
+     *
+     * @return
+     */
+    public boolean testTwoFilterTimestamp() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "ts_value,le,2011-12-30T00:00:00")
+                .queryParam("filter", "ts_value,gt,2011-12-30T23:59:59");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testTwoFilterTimestamp---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Tests to get a dataset using a lower than filter
      *

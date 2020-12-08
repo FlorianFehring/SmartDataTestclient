@@ -43,6 +43,8 @@ public class SmartDataTestCllient {
         CollectionRessourceTest trt = new CollectionRessourceTest();
         builder.add("testCreateCollection", trt.testCreateCollection());
         builder.add("testCreateCollectionAllreadyExists", trt.testCreateCollectionAllreadyExists());
+        builder.add("testCreateCollectionGivingAutoId",trt.testCreateCollectionGivingAutoId());
+        builder.add("testCreateCollectionGivingId",trt.testCreateCollectionGivingId());
         builder.add("testGetAttributes", trt.testGetAttributes());
         builder.add("testAddAttributes", trt.testAddAttributes());
         builder.add("testAddGeoAttributes", trt.testAddGeoAttributes());
@@ -50,6 +52,7 @@ public class SmartDataTestCllient {
         builder.add("testChangeSRID", trt.testChangeSRID());
         RecordsRessourceTest rrt = new RecordsRessourceTest();
         builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
+//        builder.add("testReCreateSetSimple",rrt.testReCreateSetSimple());
         builder.add("testGetSetSimple", rrt.testGetSetSimple());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
         builder.add("testGetSetsSimple", rrt.testGetSetsSimple());

@@ -48,7 +48,6 @@ public class CollectionRessourceTest {
                 .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        builder.add("name", "testcol");
         JsonArrayBuilder colarr = Json.createArrayBuilder();
         // Name column
         JsonObjectBuilder namecol = Json.createObjectBuilder();
@@ -94,6 +93,153 @@ public class CollectionRessourceTest {
     }
 
     /**
+     * Test create a collection with givin id column
+     *
+     * @return true if the collection could be created
+     */
+    public boolean testCreateCollectionGivingAutoId() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("colwithautoid")
+                .path("create")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("name", "testcol");
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // Name column
+        JsonObjectBuilder idcol = Json.createObjectBuilder();
+        idcol.add("name", "tid"); // Name of the id column can freely choosen
+        idcol.add("type", "int8");
+        idcol.add("isAutoIncrement", true);
+        idcol.add("isIdentity", true);
+        colarr.add(idcol);
+        // Name column
+        JsonObjectBuilder namecol = Json.createObjectBuilder();
+        namecol.add("name", "name");
+        namecol.add("type", "VARCHAR(255)");
+        colarr.add(namecol);
+        builder.add("attributes", colarr);
+        JsonObject dataObject = builder.build();
+        Entity<String> coldef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(coldef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateCollectionGivingAutoId---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
+            // Check definition
+            WebTarget targetQ = webTarget
+                    .path("colwithautoid")
+                    .path("getAttributes")
+                    .queryParam("storage", STORAGE);
+            Response responseQ = targetQ.request(MediaType.APPLICATION_JSON).get();
+            String responseTextQ = responseQ.readEntity(String.class);
+
+            JsonParser parserQ = Json.createParser(new StringReader(responseTextQ));
+            parserQ.next();
+            JsonObject responseObj = parserQ.getObject();
+            JsonArray listArr = responseObj.getJsonArray("list");
+            for (int i = 0; i < listArr.size(); i++) {
+                JsonObject curObj = (JsonObject) listArr.get(i);
+                if (curObj.getString("name").equals("tid")) {
+                    boolean isId = curObj.getBoolean("isIdentity");
+                    if (!isId) {
+                        System.out.println("Expected >tid< to be identity column, but is not");
+                        return false;
+                    }
+                    boolean isAutoInc = curObj.getBoolean("isAutoIncrement");
+                    if (!isAutoInc) {
+                        System.out.println("Expected >tid< to be autoincrement, but is not");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+        /**
+     * Test create a collection with givin id column
+     *
+     * @return true if the collection could be created
+     */
+    public boolean testCreateCollectionGivingId() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("colwithid")
+                .path("create")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("name", "testcol");
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // Name column
+        JsonObjectBuilder idcol = Json.createObjectBuilder();
+        idcol.add("name", "tid"); // Name of the id column can freely choosen
+        idcol.add("type", "int8");
+        idcol.add("isIdentity", true);
+        colarr.add(idcol);
+        // Name column
+        JsonObjectBuilder namecol = Json.createObjectBuilder();
+        namecol.add("name", "name");
+        namecol.add("type", "VARCHAR(255)");
+        colarr.add(namecol);
+        builder.add("attributes", colarr);
+        JsonObject dataObject = builder.build();
+        Entity<String> coldef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(coldef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateCollectionGivingId---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
+            // Check definition
+            WebTarget targetQ = webTarget
+                    .path("colwithid")
+                    .path("getAttributes")
+                    .queryParam("storage", STORAGE);
+            Response responseQ = targetQ.request(MediaType.APPLICATION_JSON).get();
+            String responseTextQ = responseQ.readEntity(String.class);
+
+            JsonParser parserQ = Json.createParser(new StringReader(responseTextQ));
+            parserQ.next();
+            JsonObject responseObj = parserQ.getObject();
+            JsonArray listArr = responseObj.getJsonArray("list");
+            for (int i = 0; i < listArr.size(); i++) {
+                JsonObject curObj = (JsonObject) listArr.get(i);
+                if (curObj.getString("name").equals("tid")) {
+                    boolean isId = curObj.getBoolean("isIdentity");
+                    if (!isId) {
+                        System.out.println("Expected >tid< to be identity column, but is not");
+                        return false;
+                    }
+                    boolean isAutoInc = curObj.getBoolean("isAutoIncrement");
+                    if (isAutoInc) {
+                        System.out.println("Expected >tid< to be NOT autoincrement, but is");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Tests the response for creating a collection, that is allready existing.
      *
      * @return true if response states no changes done
@@ -138,7 +284,8 @@ public class CollectionRessourceTest {
     }
 
     /**
-     * Tests if there comes an empty list, if there are no collections in the storage
+     * Tests if there comes an empty list, if there are no collections in the
+     * storage
      *
      * @return
      */

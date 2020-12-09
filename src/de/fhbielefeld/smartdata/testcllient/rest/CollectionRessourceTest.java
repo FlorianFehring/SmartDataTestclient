@@ -150,7 +150,7 @@ public class CollectionRessourceTest {
             JsonParser parserQ = Json.createParser(new StringReader(responseTextQ));
             parserQ.next();
             JsonObject responseObj = parserQ.getObject();
-            JsonArray listArr = responseObj.getJsonArray("list");
+            JsonArray listArr = responseObj.getJsonArray("attributes");
             for (int i = 0; i < listArr.size(); i++) {
                 JsonObject curObj = (JsonObject) listArr.get(i);
                 if (curObj.getString("name").equals("tid")) {
@@ -172,7 +172,7 @@ public class CollectionRessourceTest {
         }
     }
 
-        /**
+    /**
      * Test create a collection with givin id column
      *
      * @return true if the collection could be created
@@ -223,7 +223,7 @@ public class CollectionRessourceTest {
             JsonParser parserQ = Json.createParser(new StringReader(responseTextQ));
             parserQ.next();
             JsonObject responseObj = parserQ.getObject();
-            JsonArray listArr = responseObj.getJsonArray("list");
+            JsonArray listArr = responseObj.getJsonArray("attributes");
             for (int i = 0; i < listArr.size(); i++) {
                 JsonObject curObj = (JsonObject) listArr.get(i);
                 if (curObj.getString("name").equals("tid")) {
@@ -244,7 +244,7 @@ public class CollectionRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests the response for creating a collection, that is allready existing.
      *
@@ -326,7 +326,6 @@ public class CollectionRessourceTest {
         if (webTarget == null) {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
-//NOCH ZU DEN AUFRUFEN HINZUFÜGEN!
         WebTarget target = webTarget.path("testcol")
                 .path("getAttributes")
                 .queryParam("storage", "notexisting");
@@ -343,7 +342,7 @@ public class CollectionRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests the adding of additional attributes
      *
@@ -444,10 +443,14 @@ public class CollectionRessourceTest {
             System.out.println(responseText);
         }
 
+        if (Response.Status.OK.getStatusCode() != response.getStatus()) {
+            return false;
+        }
+        
         JsonParser parser = Json.createParser(new StringReader(responseText));
         parser.next();
         JsonObject responseObj = parser.getObject();
-        JsonArray listArr = responseObj.getJsonArray("list");
+        JsonArray listArr = responseObj.getJsonArray("attributes");
         for (int i = 0; i < listArr.size(); i++) {
             JsonObject curObj = (JsonObject) listArr.get(i);
             if (curObj.getString("name").equals("addedGeoAttribute1")) {
@@ -512,7 +515,7 @@ public class CollectionRessourceTest {
             JsonParser parser = Json.createParser(new StringReader(responseTextCheck));
             parser.next();
             JsonObject responseObj = parser.getObject();
-            JsonArray listArr = responseObj.getJsonArray("list");
+            JsonArray listArr = responseObj.getJsonArray("attributes");
             for (int i = 0; i < listArr.size(); i++) {
                 JsonObject curObj = (JsonObject) listArr.get(i);
                 if (curObj.getString("name").equals("addedGeoAttribute1")) {
@@ -529,6 +532,52 @@ public class CollectionRessourceTest {
                 }
             }
             return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test if the attributes can be get and with that data a new table can be
+     * created on the second storage.
+     *
+     * @return true if possible
+     */
+    public boolean testGetAttributesAndCreateTable() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .path("getAttributes")
+                .queryParam("storage", STORAGE);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetAttributesAndCreateTable---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            WebTarget target2 = webTarget
+                    .path("testcol")
+                    .path("create")
+                    .queryParam("storage", STORAGE+"2");
+            
+            // Recreate on second storage
+            Entity<String> coldef2 = Entity.json(responseText);
+
+            Response response2 = target2.request(MediaType.APPLICATION_JSON).post(coldef2);
+            String responseText2 = response2.readEntity(String.class);
+            if (PRINT_DEBUG_MESSAGES) {
+                System.out.println(response2.getStatusInfo());
+                System.out.println(responseText2);
+            }
+            if (Response.Status.CREATED.getStatusCode() == response2.getStatus()) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }

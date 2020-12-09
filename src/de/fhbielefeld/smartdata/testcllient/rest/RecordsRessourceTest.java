@@ -21,16 +21,15 @@ import javax.ws.rs.core.Response;
  */
 public class RecordsRessourceTest {
 
-    private static LocalDateTime startDateTime;
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
     private static final String RESOURCE = "records";
     private static final String STORAGE = "test";
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
 
+    private int createdSets = 0;
+
     public RecordsRessourceTest() {
-        startDateTime = LocalDateTime.now();
-        System.out.println("TEST beforeAll");
         webTarget = WebTargetCreator.createWebTarget(SERVER, RESOURCE);
     }
 
@@ -64,10 +63,62 @@ public class RecordsRessourceTest {
             System.out.println(responseText);
         }
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            createdSets++;
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * Test recreateing a simple dataset
+     *
+     * @return true if dataset was rejected
+     */
+    public boolean testReCreateSetSimple() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("testcol")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("name", "recreateTestset");
+        builder.add("float_value", 77.77);
+        builder.add("int_value", 77);
+        builder.add("bool_value", true);
+        builder.add("ts_value", "2015-04-20T10:15:30");
+        JsonObject dataObject = builder.build();
+        Entity<String> collectiondef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testReCreateSetSimple---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            createdSets++;
+            // Add dataset id to dataset
+            builder.add("id", Integer.parseInt(responseText));
+            // Resent dataset
+            JsonObject dataObject2 = builder.build();
+            Entity<String> collectiondef2 = Entity.json(dataObject2.toString());
+
+            Response response2 = target.request(MediaType.APPLICATION_JSON).post(collectiondef2);
+            String responseText2 = response2.readEntity(String.class);
+            if (PRINT_DEBUG_MESSAGES) {
+                System.out.println("Response from resent:");
+                System.out.println(response2.getStatusInfo());
+                System.out.println(responseText2);
+            }
+            if (Response.Status.CONFLICT.getStatusCode() == response2.getStatus()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -167,31 +218,34 @@ public class RecordsRessourceTest {
                 .queryParam("storage", STORAGE);
 
         JsonArrayBuilder jab = Json.createArrayBuilder();
-        JsonObjectBuilder job1 = Json.createObjectBuilder();
-        job1.add("name", "testwert1");
-        job1.add("float_value", 12.2323);
-        job1.add("int_value", 12);
-        job1.add("bool_value", true);
-        job1.add("ts_value", "31.12.2019 12:14");
-        jab.add(job1);
-        JsonObjectBuilder job2 = Json.createObjectBuilder();
-        job2.add("name", "testwert2");
-        job2.add("float_value", -11.1111);
-        job2.add("int_value", -11);
-        job2.add("bool_value", false);
-        job2.add("ts_value", "2013-12-30T10:15:30");
-        jab.add(job2);
-        JsonObjectBuilder job3 = Json.createObjectBuilder();
-        job3.add("name", "testwert3");
-        job3.add("float_value", 42.0);
-        job3.add("int_value", 42);
-        job3.add("bool_value", true);
-        job3.add("ts_value", "2011-12-31 10:15:30.123");
-        jab.add(job3);
-        JsonObjectBuilder job4 = Json.createObjectBuilder();
-        job4.add("name", "testwert_nullset");
-        job4.add("int_value", 0);
-        jab.add(job4);
+        JsonObjectBuilder set1 = Json.createObjectBuilder();
+        set1.add("name", "testwert1");
+        set1.add("float_value", 12.2323);
+        set1.add("int_value", 12);
+        set1.add("bool_value", true);
+        set1.add("ts_value", "31.12.2018 12:14");
+        set1.add("txt_value", "Datensatz für cs-filter in-filter1");
+        jab.add(set1);
+        JsonObjectBuilder set2 = Json.createObjectBuilder();
+        set2.add("name", "testwert2");
+        set2.add("float_value", -11.1111);
+        set2.add("int_value", -11);
+        set2.add("bool_value", false);
+        set2.add("ts_value", "2013-12-30T10:15:30");
+        set2.add("txt_value", "sw-filter Datensatz in-filter2");
+        jab.add(set2);
+        JsonObjectBuilder set3 = Json.createObjectBuilder();
+        set3.add("name", "testwert3");
+        set3.add("float_value", 42.0);
+        set3.add("int_value", 42);
+        set3.add("bool_value", true);
+        set3.add("ts_value", "2011-12-31 10:15:30.123");
+        set3.add("txt_value", "Test für ew-filter");
+        jab.add(set3);
+        JsonObjectBuilder set4 = Json.createObjectBuilder();
+        set4.add("name", "testwert_nullset");
+        set4.add("int_value", 0);
+        jab.add(set4);
         JsonArray dataObject = jab.build();
         Entity<String> collectiondef = Entity.json(dataObject.toString());
 
@@ -203,10 +257,12 @@ public class RecordsRessourceTest {
             System.out.println(responseText);
         }
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            return true;
-        } else {
-            return false;
+            createdSets += 4;
+            if (responseText.contains(",")) {
+                return true;
+            }
         }
+        return false;
     }
 
     /**
@@ -268,6 +324,7 @@ public class RecordsRessourceTest {
             System.out.println(responseText);
         }
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            createdSets++;
             return true;
         } else {
             return false;
@@ -419,8 +476,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 5) {
-                System.out.println("Expected that there are 5 datasets, but there where " + recordsArr.size());
+            if (recordsArr.size() != createdSets) {
+                System.out.println("Expected that there are " + createdSets + " datasets, but there where " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1042,7 +1099,7 @@ public class RecordsRessourceTest {
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testNEQFilter---");
+            System.out.println("---testNEQFilterFound---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -1056,8 +1113,9 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 5) {
-                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets - 1) {
+                System.out.println("Expected that there are " + (createdSets - 1)
+                        + " dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1105,7 +1163,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "name,cs,stwe");
+                .queryParam("filter", "txt_value,cs,cs-filter");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -1123,8 +1181,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 6) {
-                System.out.println("Expected that there are 6 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1230,8 +1288,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 6) {
-                System.out.println("Expected that there are 6 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets) {
+                System.out.println("Expected that there are " + createdSets + " dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1252,7 +1310,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "name,ncs,stwe");
+                .queryParam("filter", "name,ncs,notexists");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -1270,8 +1328,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (!recordsArr.isEmpty()) {
-                System.out.println("Expected that there are 0 datasets, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets) {
+                System.out.println("Expected that there are " + createdSets + " datasets, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1319,7 +1377,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "name,sw,test");
+                .queryParam("filter", "txt_value,sw,sw-filter");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -1337,8 +1395,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 6) {
-                System.out.println("Expected that there are 6 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1426,7 +1484,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "name,nsw,wert");
+                .queryParam("filter", "txt_value,nsw,sw-filter");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -1444,8 +1502,9 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 6) {
-                System.out.println("Expected that there are 6 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets - 1) {
+                System.out.println("Expected that there are " + (createdSets - 1)
+                        + " dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1466,7 +1525,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "name,nsw,test");
+                .queryParam("filter", "txt_value,nsw,sw-filter");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -1484,8 +1543,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (!recordsArr.isEmpty()) {
-                System.out.println("Expected that there are 0 datasets, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets - 1) {
+                System.out.println("Expected that there are " + (createdSets - 1) + " datasets, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1534,7 +1593,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "name,ew,wert");
+                .queryParam("filter", "txt_value,ew,ew-filter");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -1659,8 +1718,9 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 5) {
-                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets - 1) {
+                System.out.println("Expected that there are " + (createdSets - 1)
+                        + " dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -1736,7 +1796,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a lower than filter with timestamp value
      *
@@ -1778,8 +1838,8 @@ public class RecordsRessourceTest {
     }
 
     /**
-     * Tests to get a dataset using two filters with timestamp value.
-     * This is the same functionallity as the between filter
+     * Tests to get a dataset using two filters with timestamp value. This is
+     * the same functionallity as the between filter
      *
      * @return
      */
@@ -1818,7 +1878,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a lower than filter
      *
@@ -1916,8 +1976,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 2) {
-                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 3) {
+                System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2033,7 +2093,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a lower or equal filter with timestamp value
      *
@@ -2172,8 +2232,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 2) {
-                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 3) {
+                System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2280,8 +2340,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 2) {
-                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 3) {
+                System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2289,9 +2349,10 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
-     * Tests to get a dataset using a greater or equal filter  with timestamp value
+     * Tests to get a dataset using a greater or equal filter with timestamp
+     * value
      *
      * @return
      */
@@ -2320,8 +2381,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 2) {
-                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 3) {
+                System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2536,8 +2597,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 2) {
-                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 3) {
+                System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2545,7 +2606,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a greater than filter with timestamp value
      *
@@ -2576,8 +2637,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 1) {
-                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 2) {
+                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -2898,8 +2959,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 2) {
-                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 3) {
+                System.out.println("Expected that there are 3 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -3152,8 +3213,9 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 2) {
-                System.out.println("Expected that there are 2 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets - 4) {
+                System.out.println("Expected that there are " + (createdSets - 4)
+                        + " dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -3192,8 +3254,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (!recordsArr.isEmpty()) {
-                System.out.println("Expected that there are 0 datasets, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets - 6) {
+                System.out.println("Expected that there are " + (createdSets - 6) + " datasets, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -3241,7 +3303,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "ts_value,in,2011-12-29T10:15:30,2013-12-30T10:15:30,2019-12-29T10:15:30");
+                .queryParam("filter", "ts_value,in,2011-12-29T10:15:30,2013-12-30T10:15:30,2018-12-29T10:15:30");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -3281,7 +3343,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcol")
                 .queryParam("storage", STORAGE)
-                .queryParam("filter", "name,in,test,test2,testwert,testwert2");
+                .queryParam("filter", "txt_value,in,Datensatz für cs-filter in-filter1,sw-filter Datensatz in-filter2");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
@@ -3486,8 +3548,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 5) {
-                System.out.println("Expected that there are 5 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != createdSets - 1) {
+                System.out.println("Expected that there are " + (createdSets - 1) + " dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;

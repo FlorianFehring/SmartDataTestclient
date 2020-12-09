@@ -47,6 +47,7 @@ public class SmartDataTestCllient {
         builder.add("testCreateCollectionGivingAutoId",trt.testCreateCollectionGivingAutoId());
         builder.add("testCreateCollectionGivingId",trt.testCreateCollectionGivingId());
         builder.add("testGetAttributes", trt.testGetAttributes());
+        builder.add("testGetAttributesNoExSchema", trt.testGetAttributesNoExSchema());
         builder.add("testAddAttributes", trt.testAddAttributes());
         builder.add("testAddGeoAttributes", trt.testAddGeoAttributes());
         builder.add("testGetGeoAttributes", trt.testGetGeoAttributes());

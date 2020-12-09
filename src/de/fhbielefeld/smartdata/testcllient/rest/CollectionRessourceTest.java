@@ -318,6 +318,33 @@ public class CollectionRessourceTest {
     }
 
     /**
+     * Tests getting attributes from not existing schema
+     *
+     * @return
+     */
+    public boolean testGetAttributesNoExSchema() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+//NOCH ZU DEN AUFRUFEN HINZUFÜGEN!
+        WebTarget target = webTarget.path("testcol")
+                .path("getAttributes")
+                .queryParam("storage", "notexisting");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetAttributesNoExSchema---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.NOT_FOUND.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Tests the adding of additional attributes
      *
      * @return true if response states no changes done

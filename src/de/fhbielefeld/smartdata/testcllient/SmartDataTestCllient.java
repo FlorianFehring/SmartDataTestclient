@@ -164,17 +164,17 @@ public class SmartDataTestCllient {
         // Test copy datasets
         builder.add("testGetSetAndCreateOnSecond",rrt.testGetSetAndCreateOnSecond());
         builder.add("testGetSetsAndCreateOnSecond", rrt.testGetSetsAndCreateOnSecond());
-//        // Performance mesurement
-//        RecordsPerformanceTest rpt = new RecordsPerformanceTest();
-//        builder.add("performanceCreateSetSimple", rpt.performanceCreateSetSimple());
-//        builder.add("performanceGetSetSimple", rpt.performanceGetSetSimple());
-//        builder.add("performanceGetSetsSimple", rpt.performanceGetSetsSimple());
-//        // Test deletion
-//        builder.add("testDeleteSet", rrt.testDeleteSet());
-//        builder.add("testDeleteSets", rrt.testDeleteSets());
+        // Performance mesurement
+        RecordsPerformanceTest rpt = new RecordsPerformanceTest();
+        builder.add("performanceCreateSetSimple", rpt.performanceCreateSetSimple());
+        builder.add("performanceGetSetSimple", rpt.performanceGetSetSimple());
+        builder.add("performanceGetSetsSimple", rpt.performanceGetSetsSimple());
+        // Test deletion
+        builder.add("testDeleteSet", rrt.testDeleteSet());
+        builder.add("testDeleteSets", rrt.testDeleteSets());
 
-//        builder.add("testDeleteStorage", brt.testDeleteStorage());
-//        builder.add("testDeleteSecondStorage", brt.testDeleteSecondStorage());
+        builder.add("testDeleteStorage", brt.testDeleteStorage());
+        builder.add("testDeleteSecondStorage", brt.testDeleteSecondStorage());
 
         JsonObject dataObject = builder.build();
 

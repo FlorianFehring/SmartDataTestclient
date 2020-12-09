@@ -52,9 +52,9 @@ public class RecordsRessourceTest {
         builder.add("bool_value", true);
         builder.add("ts_value", "2011-12-30T10:15:30");
         JsonObject dataObject = builder.build();
-        Entity<String> collectiondef = Entity.json(dataObject.toString());
+        Entity<String> dataset = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(dataset);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testCreateSetSimple---");
@@ -89,9 +89,9 @@ public class RecordsRessourceTest {
         builder.add("bool_value", true);
         builder.add("ts_value", "2015-04-20T10:15:30");
         JsonObject dataObject = builder.build();
-        Entity<String> collectiondef = Entity.json(dataObject.toString());
+        Entity<String> dataset = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(dataset);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testReCreateSetSimple---");
@@ -104,9 +104,9 @@ public class RecordsRessourceTest {
             builder.add("id", Integer.parseInt(responseText));
             // Resent dataset
             JsonObject dataObject2 = builder.build();
-            Entity<String> collectiondef2 = Entity.json(dataObject2.toString());
+            Entity<String> dataset2 = Entity.json(dataObject2.toString());
 
-            Response response2 = target.request(MediaType.APPLICATION_JSON).post(collectiondef2);
+            Response response2 = target.request(MediaType.APPLICATION_JSON).post(dataset2);
             String responseText2 = response2.readEntity(String.class);
             if (PRINT_DEBUG_MESSAGES) {
                 System.out.println("Response from resent:");
@@ -246,9 +246,9 @@ public class RecordsRessourceTest {
         set4.add("int_value", 0);
         jab.add(set4);
         JsonArray dataObject = jab.build();
-        Entity<String> collectiondef = Entity.json(dataObject.toString());
+        Entity<String> datasets = Entity.json(dataObject.toString());
 
-        Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(datasets);
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testCreateSetsSimple---");
@@ -3583,9 +3583,9 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
-     * Tests get set and post it to second storage
+     * Tests get one set and post it to second storage
      *
      * @return
      */
@@ -3600,12 +3600,70 @@ public class RecordsRessourceTest {
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testGetSetSimple---");
+            System.out.println("---testGetSetAndCreateOnSecond---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            return true;
+            WebTarget target2 = webTarget
+                    .path("testcol")
+                    .queryParam("storage", STORAGE+"2");
+            
+            Entity<String> dataset = Entity.json(responseText);
+
+            Response response2 = target2.request(MediaType.APPLICATION_JSON).post(dataset);
+            String responseText2 = response2.readEntity(String.class);
+            if (PRINT_DEBUG_MESSAGES) {
+                System.out.println(response2.getStatusInfo());
+                System.out.println(responseText2);
+            }
+            if (Response.Status.OK.getStatusCode() == response2.getStatus()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests get one set and post it to second storage
+     *
+     * @return
+     */
+    public boolean testGetSetsAndCreateOnSecond() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetsAndCreateOnSecond---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            WebTarget target2 = webTarget
+                    .path("testcol")
+                    .queryParam("storage", STORAGE+"2");
+            
+            Entity<String> dataset = Entity.json(responseText);
+
+            Response response2 = target2.request(MediaType.APPLICATION_JSON).post(dataset);
+            String responseText2 = response2.readEntity(String.class);
+            if (PRINT_DEBUG_MESSAGES) {
+                System.out.println(response2.getStatusInfo());
+                System.out.println(responseText2);
+            }
+            if (Response.Status.OK.getStatusCode() == response2.getStatus()) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }

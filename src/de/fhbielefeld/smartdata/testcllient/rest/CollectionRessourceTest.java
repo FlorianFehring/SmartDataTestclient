@@ -74,6 +74,12 @@ public class CollectionRessourceTest {
         tscol.add("name", "ts_value");
         tscol.add("type", "TIMESTAMP");
         colarr.add(tscol);
+        // Text column
+        JsonObjectBuilder txtcol = Json.createObjectBuilder();
+        txtcol.add("name", "txt_value");
+        txtcol.add("type", "TEXT");
+        colarr.add(txtcol);
+        // Create attribute array
         builder.add("attributes", colarr);
         JsonObject dataObject = builder.build();
         Entity<String> coldef = Entity.json(dataObject.toString());

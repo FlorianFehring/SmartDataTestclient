@@ -50,7 +50,7 @@ public class StorageRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test create a storage
      *
@@ -76,10 +76,10 @@ public class StorageRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests the response for creating a storage, that is allready existing.
-     * 
+     *
      * @return true if response states no changes done
      */
     public boolean testCreateStorageAllreadyExists() {
@@ -104,7 +104,34 @@ public class StorageRessourceTest {
     }
 
     /**
-     * Tests if there comes an empty list, if there are no collections in the storage
+     * Test create a second storage
+     *
+     * @return true if the storage could be created
+     */
+    public boolean testCreateSecondStorage() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget.path("create")
+                .queryParam("name", STORAGE + "2");
+        Response response = target.request(MediaType.APPLICATION_JSON).post(null);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateStorage---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Tests if there comes an empty list, if there are no collections in the
+     * storage
      *
      * @return
      */
@@ -171,6 +198,32 @@ public class StorageRessourceTest {
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
             System.out.println("---testDeleteStorage---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests the deletion of a storage that contains collections
+     *
+     * @return true if storage was deleted
+     */
+    public boolean testDeleteSecondStorage() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget.path("delete")
+                .queryParam("name", STORAGE + "2");
+        Response response = target.request(MediaType.APPLICATION_JSON).delete();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testDeleteSecondStorage---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }

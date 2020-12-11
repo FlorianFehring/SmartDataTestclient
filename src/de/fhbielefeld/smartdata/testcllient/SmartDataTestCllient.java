@@ -170,6 +170,15 @@ public class SmartDataTestCllient {
         builder.add("performanceCreateSetSimple", rpt.performanceCreateSetSimple());
         builder.add("performanceGetSetSimple", rpt.performanceGetSetSimple());
         builder.add("performanceGetSetsSimple", rpt.performanceGetSetsSimple());
+        // Tests with geofilter
+        // Tests with contains geofilter
+        builder.add("testSCOFilterFound",rrt.testSCOFilterFound());
+        builder.add("testSCOFilterNotFound",rrt.testSCOFilterNotFound());
+        builder.add("testSCOFilterMissingColumn",rrt.testSCOFilterMissingAttribute());
+        builder.add("testSCOFilter3DPoint",rrt.testSCOFilter3DPoint());
+        builder.add("testSCOFilter2DMultipolygon",rrt.testSCOFilter2DMultipolygon());
+        builder.add("testSCOFilter3DMultipolygon",rrt.testSCOFilter3DMultipolygon());
+        builder.add("testSCOFilter3DPolygon",rrt.testSCOFilter3DPolygon());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

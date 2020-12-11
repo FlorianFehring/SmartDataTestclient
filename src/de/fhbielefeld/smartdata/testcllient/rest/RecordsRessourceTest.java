@@ -3769,4 +3769,271 @@ public class RecordsRessourceTest {
             return false;
         }
     }
+    
+    /**
+     * Tests to get a dataset using a contains geofilter
+     *
+     * @return
+     */
+    public boolean testSCOFilterFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "point2d,sco,SRID=25832;POINT(472023.584332 5755448.168211)");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCOFilterFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a contains geofilter
+     *
+     * @return
+     */
+    public boolean testSCOFilterNotFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "point2d,sco,SRID=25832;POINT(472059.584332 5755448.168211)");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCONotFilterFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 0) {
+                System.out.println("Expected that there are 0 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a contains geofilter on non existend column
+     *
+     * @return
+     */
+    public boolean testSCOFilterMissingAttribute() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "notexisting,sco,SRID=25832;POINT(472059.584332 5755448.168211");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCOFilterMissingAttribute---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.BAD_REQUEST.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a contains geofilter with 3d point value
+     *
+     * @return
+     */
+    public boolean testSCOFilter3DPoint() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "point3d,sco,SRID=5555;POINT(471802.553 5756386.124 173.5)");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCOFilter3DPoint---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a contains geofilter with 2d multipolygon value
+     *
+     * @return
+     */
+    public boolean testSCOFilter2DMultipolygon() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "multipolygon2d,sco,SRID=25832;MULTIPOLYGON(((471804.796 5756387.331,471810.576 5756384.561,471809.684 5756382.703,471810.975 5756382.084,471816.292 5756380.342,471821.961 5756379.797,471821.596 5756368.72,471818.571 5756370.037,471814.517 5756369.315,471811.926 5756370.78,471807.187 5756371.203,471805.32 5756373.097,471801.578 5756374.056,471799.658 5756376.306,471795.534 5756377.527,471794.316 5756379.705,471790.496 5756381.757,471789.345 5756384.437,471785.919 5756387.095,471794.769 5756394.049,471798.595 5756389.188,471802.553 5756386.124,471803.903 5756385.474,471804.796 5756387.331)))");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCOFilter2DMultipolygon---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a contains geofilter with 3d multipolygon value
+     *
+     * @return
+     */
+    public boolean testSCOFilter3DMultipolygon() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "multipolygon3d,sco,SRID=5555;MULTIPOLYGON(((471361.680002213 5755037.32800102 0.0, 471368.246999741 5755041.79300117 0.0, 471374.757001877 5755041.13599968 0.0, 471361.680002213 5755037.32800102 0.0)))");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCOFilter3DMultipolygon---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a contains geofilter with 3d polygon value
+     *
+     * @return
+     */
+    public boolean testSCOFilter3DPolygon() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "multipolygon3d,sco,SRID=5555;POLYGON((471369.5 5755012.49 118.0,471369.493384076 5755012.46542657 118.0,471369.471282536 5755012.48198582 118.0,471369.431870814 5755012.51151448 118.0,471369.5 5755012.49 118.0))");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCOFilter3DPolygon---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

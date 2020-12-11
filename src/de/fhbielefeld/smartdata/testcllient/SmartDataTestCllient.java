@@ -53,6 +53,7 @@ public class SmartDataTestCllient {
         builder.add("testGetGeoAttributes", trt.testGetGeoAttributes());
         builder.add("testChangeSRID", trt.testChangeSRID());
         builder.add("testGetAttributesAndCreateTable", trt.testGetAttributesAndCreateTable());
+        builder.add("testCreateGeoCollection", trt.testCreateGeoCollection());
         RecordsRessourceTest rrt = new RecordsRessourceTest();
         builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
         builder.add("testGetSetSimple", rrt.testGetSetSimple());
@@ -71,7 +72,9 @@ public class SmartDataTestCllient {
         // Unicode support tests
         builder.add("testCreateSetUnicode", rrt.testCreateSetUnicode());
         builder.add("testGetSetUnicode", rrt.testGetSetUnicode());
-        
+        // Geometry support tests
+        builder.add("testCreateGeoSetsSimple", rrt.testCreateGeoSetsSimple());
+        builder.add("testGetGeoSetsSimple", rrt.testGetGeoSetsSimple());
         // Tests with filter
         builder.add("testEQFilterString",rrt.testEQFilterString());
         builder.add("testEQFilterFloat",rrt.testEQFilterFloat());
@@ -91,10 +94,8 @@ public class SmartDataTestCllient {
         builder.add("testSWFilterFound",rrt.testSWFilterFound());
         builder.add("testSWFilterNotFound",rrt.testSWFilterNotFound());
         builder.add("testSWFilterMissingColumn",rrt.testSWFilterMissingAttribute());
-        // DOES NOT WORK Felder die NULL sind, werden als true erkannt
-        //builder.add("testNSWFilterFound",rrt.testNSWFilterFound());
-        // DOES NOt WORK Felder die NULL sind, werden als true erkannt
-        //builder.add("testNSWFilterNotFound",rrt.testNSWFilterNotFound());
+        builder.add("testNSWFilterFound",rrt.testNSWFilterFound());
+        builder.add("testNSWFilterNotFound",rrt.testNSWFilterNotFound());
         builder.add("testNSWFilterMissingColumn",rrt.testNSWFilterMissingAttribute());
         //Tests with ends with filter
         builder.add("testEWFilterFound",rrt.testEWFilterFound());

@@ -582,4 +582,63 @@ public class CollectionRessourceTest {
             return false;
         }
     }
+    
+        /**
+     * Test create a collection with geometry attributes
+     *
+     * @return true if the collection could be created
+     */
+    public boolean testCreateGeoCollection() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("testgeocol")
+                .path("create")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // 2D Point attribute
+        JsonObjectBuilder point2dcol = Json.createObjectBuilder();
+        point2dcol.add("name", "point2d");
+        point2dcol.add("type", "geometry(Point,25832)");
+        colarr.add(point2dcol);
+        // 3D Point attribute
+        JsonObjectBuilder point3dcol = Json.createObjectBuilder();
+        point3dcol.add("name", "point3d");
+        point3dcol.add("type", "geometry(PointZ,5555)");
+        colarr.add(point3dcol);
+        // 2D Multipolygon attribute
+        JsonObjectBuilder multipolygon2dcol = Json.createObjectBuilder();
+        multipolygon2dcol.add("name", "multipolygon2d");
+        multipolygon2dcol.add("type", "geometry(Multipolygon,25832)");
+        colarr.add(multipolygon2dcol);
+        // 3D Multipolygon attribute
+        JsonObjectBuilder multipolygon3dcol = Json.createObjectBuilder();
+        multipolygon3dcol.add("name", "multipolygon3d");
+        multipolygon3dcol.add("type", "geometry(MultipolygonZ,5555)");
+        colarr.add(multipolygon3dcol);
+        // Non-geometry attribute
+        JsonObjectBuilder non_geocol = Json.createObjectBuilder();
+        non_geocol.add("name", "non_geo");
+        non_geocol.add("type", "VARCHAR(255)");
+        colarr.add(non_geocol);
+        builder.add("attributes", colarr);
+        JsonObject dataObject = builder.build();
+        Entity<String> coldef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(coldef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateGeoCollection---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

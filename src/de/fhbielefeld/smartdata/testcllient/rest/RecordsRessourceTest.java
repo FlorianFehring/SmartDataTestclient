@@ -3826,7 +3826,7 @@ public class RecordsRessourceTest {
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
         if (PRINT_DEBUG_MESSAGES) {
-            System.out.println("---testSCONotFilterFound---");
+            System.out.println("---testSCOFilterNotFound---");
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
@@ -4031,6 +4031,113 @@ public class RecordsRessourceTest {
                 System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
                 return false;
             }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a crosses geofilter
+     *
+     * @return
+     */
+    public boolean testSCRFilterFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "multipolygon2d,scr,SRID=25832;LINESTRING(471706.445001602 5755598.41200066, 471706.445001602 5755498.41200066, 471706.445001602 5755198.41200066, 471706.445001602 5755098.41200066, 471706.445001602 5754198.41200066, 471706.445001602 5754098.41200066)");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCRFilterFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a crosses geofilter
+     *
+     * @return
+     */
+    public boolean testSCRFilterNotFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "point2d,sco,SRID=25832;MULTIPOINT(571706.445001602 5755598.41200066, 571706.445001602 5755498.41200066, 571706.445001602 5755198.41200066, 571706.445001602 5755098.41200066, 571706.445001602 5754198.41200066)");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCRFilterNotFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 0) {
+                System.out.println("Expected that there are 0 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a crosses geofilter on non existend column
+     *
+     * @return
+     */
+    public boolean testSCRFilterMissingAttribute() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "notexisting,scr,SRID=25832;POINT(472059.584332 5755448.168211");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSCRFilterMissingAttribute---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.BAD_REQUEST.getStatusCode() == response.getStatus()) {
             return true;
         } else {
             return false;

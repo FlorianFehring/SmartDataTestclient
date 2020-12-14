@@ -179,6 +179,10 @@ public class SmartDataTestCllient {
         builder.add("testSCOFilter2DMultipolygon",rrt.testSCOFilter2DMultipolygon());
         builder.add("testSCOFilter3DMultipolygon",rrt.testSCOFilter3DMultipolygon());
         builder.add("testSCOFilter3DPolygon",rrt.testSCOFilter3DPolygon());
+        // Tests with crosses geofilter
+        builder.add("testSCRFilterFound",rrt.testSCRFilterFound());
+        builder.add("testSCRFilterNotFound",rrt.testSCRFilterNotFound());
+        builder.add("testSCRFilterMissingColumn",rrt.testSCRFilterMissingAttribute());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

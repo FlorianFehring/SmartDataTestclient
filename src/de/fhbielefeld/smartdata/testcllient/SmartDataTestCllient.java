@@ -183,6 +183,10 @@ public class SmartDataTestCllient {
         builder.add("testSCRFilterFound",rrt.testSCRFilterFound());
         builder.add("testSCRFilterNotFound",rrt.testSCRFilterNotFound());
         builder.add("testSCRFilterMissingColumn",rrt.testSCRFilterMissingAttribute());
+        // Tests with disjoint geofilter
+        builder.add("testSDIFilterFound",rrt.testSDIFilterFound());
+        builder.add("testSDIFilterNotFound",rrt.testSDIFilterNotFound());
+        builder.add("testSDIFilterMissingColumn",rrt.testSDIFilterMissingAttribute());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

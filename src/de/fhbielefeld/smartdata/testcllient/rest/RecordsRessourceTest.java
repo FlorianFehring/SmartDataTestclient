@@ -4250,4 +4250,111 @@ public class RecordsRessourceTest {
             return false;
         }
     }
+    
+    /**
+     * Tests to get a dataset using a equals geofilter
+     *
+     * @return
+     */
+    public boolean testSEQFilterFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "multipolygon2d,seq,SRID=25832;MULTIPOLYGON(((472024.026 5755455.491,472022.681 5755454.573,472027.693 5755447.905,472028.884 5755447.01,472029.878 5755448.176,472035.294 5755444.102,472042.444 5755441.325,472039.037 5755430.499,472038.647 5755430.62,472030.801 5755433.056,472031.472 5755434.537,472023.959 5755437.924,472024.74 5755439.125,472018.297 5755443.299,472019.341 5755444.388,472013.515 5755449.943,472014.716 5755450.943,472009.385 5755457.331,472011.948 5755458.633,472011.558 5755459.397,472009.756 5755462.933,472017.585 5755466.474,472017.971 5755465.619,472020.318 5755460.42,472024.026 5755455.491)))");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSEQFilterFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a equals geofilter
+     *
+     * @return
+     */
+    public boolean testSEQFilterNotFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "point2d,seq,SRID=25832;POINT(471374.757001877 5755041.13599968)");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSEQFilterNotFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 0) {
+                System.out.println("Expected that there are 0 dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using a equals geofilter on non existend column
+     *
+     * @return
+     */
+    public boolean testSEQFilterMissingAttribute() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "notexisting,seq,SRID=25832;POINT(472059.584332 5755448.168211");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSEQFilterMissingAttribute---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.BAD_REQUEST.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

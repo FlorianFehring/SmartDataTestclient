@@ -195,6 +195,10 @@ public class SmartDataTestCllient {
         builder.add("testSINFilterFound",rrt.testSINFilterFound());
         builder.add("testSINFilterNotFound",rrt.testSINFilterNotFound());
         builder.add("testSINFilterMissingColumn",rrt.testSINFilterMissingAttribute());
+        // Tests with overlaps geofilter
+        builder.add("testSOVFilterFound",rrt.testSOVFilterFound());
+        builder.add("testSOVFilterNotFound",rrt.testSOVFilterNotFound());
+        builder.add("testSOVFilterMissingColumn",rrt.testSOVFilterMissingAttribute());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

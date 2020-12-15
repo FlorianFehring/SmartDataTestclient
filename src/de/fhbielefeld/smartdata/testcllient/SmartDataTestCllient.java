@@ -191,6 +191,10 @@ public class SmartDataTestCllient {
         builder.add("testSEQFilterFound",rrt.testSEQFilterFound());
         builder.add("testSEQFilterNotFound",rrt.testSEQFilterNotFound());
         builder.add("testSEQFilterMissingColumn",rrt.testSEQFilterMissingAttribute());
+        // Tests with intersects geofilter
+        builder.add("testSINFilterFound",rrt.testSINFilterFound());
+        builder.add("testSINFilterNotFound",rrt.testSINFilterNotFound());
+        builder.add("testSINFilterMissingColumn",rrt.testSINFilterMissingAttribute());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

@@ -199,6 +199,10 @@ public class SmartDataTestCllient {
         builder.add("testSOVFilterFound",rrt.testSOVFilterFound());
         builder.add("testSOVFilterNotFound",rrt.testSOVFilterNotFound());
         builder.add("testSOVFilterMissingColumn",rrt.testSOVFilterMissingAttribute());
+        // Tests with touches geofilter
+        builder.add("testSTOFilterFound",rrt.testSTOFilterFound());
+        builder.add("testSTOFilterNotFound",rrt.testSTOFilterNotFound());
+        builder.add("testSTOFilterMissingColumn",rrt.testSTOFilterMissingAttribute());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

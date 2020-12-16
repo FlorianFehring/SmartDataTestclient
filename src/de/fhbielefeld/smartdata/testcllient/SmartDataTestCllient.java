@@ -57,6 +57,7 @@ public class SmartDataTestCllient {
         RecordsRessourceTest rrt = new RecordsRessourceTest();
         builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
         builder.add("testGetSetSimple", rrt.testGetSetSimple());
+        builder.add("testGetSetWithJson", rrt.testGetSetWithJson());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
         builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
         builder.add("testReCreateSetSimple",rrt.testReCreateSetSimple());

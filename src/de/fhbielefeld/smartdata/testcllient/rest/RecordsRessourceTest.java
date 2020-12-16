@@ -53,7 +53,7 @@ public class RecordsRessourceTest {
         builder.add("bool_value", true);
         builder.add("ts_value", "2011-12-30T10:15:30");
         builder.add("json_value", "{ \"customer\": \"John Doe\", \"items\": {\"product\": \"Beer\",\"qty\": 6}}");
-        
+
         JsonObject dataObject = builder.build();
         Entity<String> dataset = Entity.json(dataObject.toString());
 
@@ -151,6 +151,46 @@ public class RecordsRessourceTest {
     }
 
     /**
+     * Tests to get a dataset with json column
+     *
+     * @return
+     */
+    public boolean testGetSetWithJson() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .path("1")
+                .queryParam("storage", STORAGE);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetWithJson---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            JsonObject recordobj = recordsArr.get(0).asJsonObject();
+            if (recordobj.getJsonObject("json_value") == null) {
+                System.out.println(">json_value< attribute is missing.");
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Tests to get a dataset with unicode data
      *
      * @return
@@ -231,7 +271,7 @@ public class RecordsRessourceTest {
         subjson.add("sub_name", "subjson");
         subjson.add("sub_boolean", false);
         subjson.add("sub_number", 10);
-        set1.add("json_value",subjson);
+        set1.add("json_value", subjson);
         jab.add(set1);
         JsonObjectBuilder set2 = Json.createObjectBuilder();
         set2.add("name", "testwert2");
@@ -3615,8 +3655,8 @@ public class RecordsRessourceTest {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             WebTarget target2 = webTarget
                     .path("testcol")
-                    .queryParam("storage", STORAGE+"2");
-            
+                    .queryParam("storage", STORAGE + "2");
+
             Entity<String> dataset = Entity.json(responseText);
 
             Response response2 = target2.request(MediaType.APPLICATION_JSON).post(dataset);
@@ -3634,7 +3674,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests get one set and post it to second storage
      *
@@ -3657,8 +3697,8 @@ public class RecordsRessourceTest {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             WebTarget target2 = webTarget
                     .path("testcol")
-                    .queryParam("storage", STORAGE+"2");
-            
+                    .queryParam("storage", STORAGE + "2");
+
             Entity<String> dataset = Entity.json(responseText);
 
             Response response2 = target2.request(MediaType.APPLICATION_JSON).post(dataset);
@@ -3676,7 +3716,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test createing multiple geometry sets at once
      *
@@ -3738,7 +3778,7 @@ public class RecordsRessourceTest {
         }
         return false;
     }
-    
+
     /**
      * Test get multiple geometry sets
      *
@@ -3776,7 +3816,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a contains geofilter
      *
@@ -3816,7 +3856,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a contains geofilter
      *
@@ -3856,7 +3896,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a contains geofilter on non existend column
      *
@@ -3883,7 +3923,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a contains geofilter with 3d point value
      *
@@ -3923,9 +3963,10 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
-     * Tests to get a dataset using a contains geofilter with 2d multipolygon value
+     * Tests to get a dataset using a contains geofilter with 2d multipolygon
+     * value
      *
      * @return
      */
@@ -3963,9 +4004,10 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
-     * Tests to get a dataset using a contains geofilter with 3d multipolygon value
+     * Tests to get a dataset using a contains geofilter with 3d multipolygon
+     * value
      *
      * @return
      */
@@ -4003,7 +4045,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a contains geofilter with 3d polygon value
      *
@@ -4043,7 +4085,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a crosses geofilter
      *
@@ -4083,7 +4125,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a crosses geofilter
      *
@@ -4123,7 +4165,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a crosses geofilter on non existend column
      *
@@ -4150,7 +4192,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a disjoint geofilter
      *
@@ -4190,7 +4232,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a disjoint geofilter
      *
@@ -4230,7 +4272,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a disjoint geofilter on non existend column
      *
@@ -4257,7 +4299,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a equals geofilter
      *
@@ -4297,7 +4339,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a equals geofilter
      *
@@ -4337,7 +4379,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a equals geofilter on non existend column
      *
@@ -4364,7 +4406,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a intersects geofilter
      *
@@ -4404,7 +4446,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a intersects geofilter
      *
@@ -4444,9 +4486,10 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
-     * Tests to get a dataset using a intersects geofilter on non existend column
+     * Tests to get a dataset using a intersects geofilter on non existend
+     * column
      *
      * @return
      */
@@ -4471,7 +4514,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a overlaps geofilter
      *
@@ -4511,7 +4554,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a overlaps geofilter
      *
@@ -4551,7 +4594,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a overlaps geofilter on non existend column
      *
@@ -4578,7 +4621,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a touches geofilter
      *
@@ -4618,7 +4661,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a touches geofilter
      *
@@ -4658,7 +4701,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a touches geofilter on non existend column
      *
@@ -4685,7 +4728,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a within geofilter
      *
@@ -4725,7 +4768,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a within geofilter
      *
@@ -4765,7 +4808,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using a within geofilter on non existend column
      *
@@ -4792,7 +4835,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using an is closed geofilter
      *
@@ -4832,9 +4875,10 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
-     * Tests to get a dataset using an is closed geofilter on non existend column
+     * Tests to get a dataset using an is closed geofilter on non existend
+     * column
      *
      * @return
      */
@@ -4859,7 +4903,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using an is simple geofilter
      *
@@ -4899,9 +4943,10 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
-     * Tests to get a dataset using an is simple geofilter on non existend column
+     * Tests to get a dataset using an is simple geofilter on non existend
+     * column
      *
      * @return
      */
@@ -4926,7 +4971,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using an is valid geofilter
      *
@@ -4966,7 +5011,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset using an is valid geofilter on non existend column
      *

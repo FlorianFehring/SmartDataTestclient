@@ -4785,4 +4785,71 @@ public class RecordsRessourceTest {
             return false;
         }
     }
+    
+    /**
+     * Tests to get a dataset using an is closed geofilter
+     *
+     * @return
+     */
+    public boolean testSICFilterFound() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "point3d,sic");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSICFilterFound---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            // There should be one dataset
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != this.createdGeoSets) {
+                System.out.println("Expected that there are " + this.createdGeoSets + " dataset, but there were " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tests to get a dataset using an is closed geofilter on non existend column
+     *
+     * @return
+     */
+    public boolean testSICFilterMissingAttribute() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("filter", "notexisting,sic");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testSICFilterMissingAttribute---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.BAD_REQUEST.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

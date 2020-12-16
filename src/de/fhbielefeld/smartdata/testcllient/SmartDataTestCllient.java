@@ -207,6 +207,9 @@ public class SmartDataTestCllient {
         builder.add("testSWIFilterFound",rrt.testSWIFilterFound());
         builder.add("testSWIFilterNotFound",rrt.testSWIFilterNotFound());
         builder.add("testSWIFilterMissingColumn",rrt.testSWIFilterMissingAttribute());
+        // Tests with is closed geofilter
+        builder.add("testSICFilterFound",rrt.testSICFilterFound());
+        builder.add("testSICFilterMissingColumn",rrt.testSICFilterMissingAttribute());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

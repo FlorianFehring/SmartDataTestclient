@@ -52,6 +52,8 @@ public class RecordsRessourceTest {
         builder.add("int_value", 12);
         builder.add("bool_value", true);
         builder.add("ts_value", "2011-12-30T10:15:30");
+        builder.add("json_value", "{ \"customer\": \"John Doe\", \"items\": {\"product\": \"Beer\",\"qty\": 6}}");
+        
         JsonObject dataObject = builder.build();
         Entity<String> dataset = Entity.json(dataObject.toString());
 
@@ -225,6 +227,11 @@ public class RecordsRessourceTest {
         set1.add("bool_value", true);
         set1.add("ts_value", "31.12.2018 12:14");
         set1.add("txt_value", "Datensatz für cs-filter in-filter1");
+        JsonObjectBuilder subjson = Json.createObjectBuilder();
+        subjson.add("sub_name", "subjson");
+        subjson.add("sub_boolean", false);
+        subjson.add("sub_number", 10);
+        set1.add("json_value",subjson);
         jab.add(set1);
         JsonObjectBuilder set2 = Json.createObjectBuilder();
         set2.add("name", "testwert2");

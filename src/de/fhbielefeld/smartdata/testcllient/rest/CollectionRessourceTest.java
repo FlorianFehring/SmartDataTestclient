@@ -79,6 +79,11 @@ public class CollectionRessourceTest {
         txtcol.add("name", "txt_value");
         txtcol.add("type", "TEXT");
         colarr.add(txtcol);
+        // JSON column
+        JsonObjectBuilder jsoncol = Json.createObjectBuilder();
+        jsoncol.add("name", "json_value");
+        jsoncol.add("type", "JSON");
+        colarr.add(jsoncol);
         // Create attribute array
         builder.add("attributes", colarr);
         JsonObject dataObject = builder.build();

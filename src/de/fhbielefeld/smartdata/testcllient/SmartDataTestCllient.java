@@ -213,6 +213,9 @@ public class SmartDataTestCllient {
         // Tests with is simple geofilter
         builder.add("testSISFilterFound",rrt.testSISFilterFound());
         builder.add("testSISFilterMissingColumn",rrt.testSISFilterMissingAttribute());
+        // Tests with is valid geofilter
+        builder.add("testSIVFilterFound",rrt.testSIVFilterFound());
+        builder.add("testSIVFilterMissingColumn",rrt.testSIVFilterMissingAttribute());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

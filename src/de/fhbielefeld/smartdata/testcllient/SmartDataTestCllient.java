@@ -210,6 +210,9 @@ public class SmartDataTestCllient {
         // Tests with is closed geofilter
         builder.add("testSICFilterFound",rrt.testSICFilterFound());
         builder.add("testSICFilterMissingColumn",rrt.testSICFilterMissingAttribute());
+        // Tests with is simple geofilter
+        builder.add("testSISFilterFound",rrt.testSISFilterFound());
+        builder.add("testSISFilterMissingColumn",rrt.testSISFilterMissingAttribute());
         // Test deletion
         builder.add("testDeleteSet", rrt.testDeleteSet());
         builder.add("testDeleteSets", rrt.testDeleteSets());

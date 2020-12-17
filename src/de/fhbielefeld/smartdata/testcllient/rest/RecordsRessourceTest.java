@@ -71,6 +71,40 @@ public class RecordsRessourceTest {
             return false;
         }
     }
+    
+    /**
+     * Test createing a dataset with string id
+     *
+     * @return true if dataset was created
+     */
+    public boolean testCreateSetStrid() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("colwithstrid")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("id", "mytestid8cas");
+        builder.add("name", "testwert");
+
+        JsonObject dataObject = builder.build();
+        Entity<String> dataset = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(dataset);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateSetStrid---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Test recreateing a simple dataset

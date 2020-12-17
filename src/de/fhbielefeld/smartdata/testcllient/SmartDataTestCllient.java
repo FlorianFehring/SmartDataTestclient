@@ -46,6 +46,7 @@ public class SmartDataTestCllient {
         builder.add("testCreateCollectionAllreadyExists", trt.testCreateCollectionAllreadyExists());
         builder.add("testCreateCollectionGivingAutoId",trt.testCreateCollectionGivingAutoId());
         builder.add("testCreateCollectionGivingId",trt.testCreateCollectionGivingId());
+        builder.add("testCreateCollectionGivingStringId",trt.testCreateCollectionGivingStringId());        
         builder.add("testGetAttributes", trt.testGetAttributes());
         builder.add("testGetAttributesNoExSchema", trt.testGetAttributesNoExSchema());
         builder.add("testAddAttributes", trt.testAddAttributes());
@@ -59,6 +60,7 @@ public class SmartDataTestCllient {
         builder.add("testGetSetSimple", rrt.testGetSetSimple());
         builder.add("testGetSetWithJson", rrt.testGetSetWithJson());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
+        builder.add("testCreateSetStrid",rrt.testCreateSetStrid());
         builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
         builder.add("testReCreateSetSimple",rrt.testReCreateSetSimple());
         builder.add("testGetSetsLimit", rrt.testGetSetsLimit());

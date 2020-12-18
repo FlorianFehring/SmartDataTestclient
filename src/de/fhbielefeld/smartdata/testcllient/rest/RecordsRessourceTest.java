@@ -295,6 +295,34 @@ public class RecordsRessourceTest {
     }
 
     /**
+     * Tests to get a dataset deflatted
+     *
+     * @return
+     */
+    public boolean testGetSetDeflatted() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null! Änderung?");
+        }
+
+        WebTarget target = webTarget.path("colflattend")
+                .path("1")
+                .queryParam("storage", STORAGE)
+                .queryParam("deflatt", true);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetSetDeflatted---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Tests to get a dataset with only included attributes
      *
      * @return

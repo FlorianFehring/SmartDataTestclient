@@ -6,8 +6,10 @@ import java.util.Random;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -521,6 +523,54 @@ public class RecordsRessourceTest {
         }
     }
 
+     /**
+     * Test get multiple sets
+     *
+     * @return
+     */
+    public boolean testGetCountSets() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testcol")
+                .queryParam("storage", STORAGE)
+                .queryParam("countonly", true);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetCountSets---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("records");
+            if (recordsArr == null) {
+                System.out.println(">records< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there is one dataset, but there where " + recordsArr.size());
+                return false;
+            }
+            JsonNumber countVal = recordsArr.get(0).asJsonObject().getJsonNumber("count");
+            if(countVal == null) {
+                System.out.println("Expected that there is one attribute called >count< but is not.");
+                return false;
+            }
+            if(countVal.intValue() != createdSets) {
+                System.out.println("Expected count to deliver >" + createdSets + "< but there where >" + countVal.intValue() + " sets.");
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Test get multiple sets from not existing collection
      *

@@ -63,6 +63,7 @@ public class SmartDataTestCllient {
         builder.add("testCreateSetFlattend", rrt.testCreateSetFlattend());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
         builder.add("testCreateSetStrid",rrt.testCreateSetStrid());
+        builder.add("testGetCountSets", rrt.testGetCountSets());
         builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
         builder.add("testGetSetDeflatted", rrt.testGetSetDeflatted());
         builder.add("testReCreateSetSimple",rrt.testReCreateSetSimple());

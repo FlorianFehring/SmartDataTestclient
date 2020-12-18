@@ -2,6 +2,7 @@ package de.fhbielefeld.smartdata.testcllient.rest;
 
 import de.fhbielefeld.scl.rest.util.WebTargetCreator;
 import java.io.StringReader;
+import java.util.Random;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -106,6 +107,48 @@ public class RecordsRessourceTest {
         }
     }
 
+    /** 
+     * Create a flattend dataset
+     * 
+     * @return true if the collection was created
+     */
+    public boolean testCreateSetFlattend() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("colflattend")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        JsonArrayBuilder dataarr = Json.createArrayBuilder();
+        JsonObjectBuilder dataset = Json.createObjectBuilder();
+        // Name column
+        dataset.add("name", "some example value");
+        // Create flattend data
+        Random rand = new Random();
+        for (int i = 0; i < 255; i++) {
+            dataset.add("U" + i, rand.nextDouble());
+            dataset.add("I" + i, rand.nextDouble());
+        }
+        dataarr.add(dataset);
+        builder.add("records", dataarr);
+        JsonObject dataObject = builder.build();
+        Entity<String> datadef = Entity.json(dataObject.toString());
+        Response response = target.request(MediaType.APPLICATION_JSON).post(datadef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateSetFlattend---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Test recreateing a simple dataset
      *

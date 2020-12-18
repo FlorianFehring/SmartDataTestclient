@@ -321,7 +321,59 @@ public class CollectionRessourceTest {
             return false;
         }
     }
-    
+
+    /** 
+     * Create a collection with attributes that are flattend datasets (e.g. #
+     * numbered attributes {U1,I11},{U2,I2},...
+     * 
+     * @return true if the collection was created
+     */
+    public boolean testCreateCollectionFlattend() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("colflattend")
+                .path("create")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // Name column
+        JsonObjectBuilder namecol = Json.createObjectBuilder();
+        namecol.add("name", "lonevalue");
+        namecol.add("type", "VARCHAR(255)");
+        colarr.add(namecol);
+        // Create deflatten columns
+        for (int i = 0; i < 255; i++) {
+            JsonObjectBuilder flatcolU = Json.createObjectBuilder();
+            flatcolU.add("name", "U" + i);
+            flatcolU.add("type", "FLOAT");
+            colarr.add(flatcolU);
+
+            JsonObjectBuilder flatcolI = Json.createObjectBuilder();
+            flatcolI.add("name", "I" + i);
+            flatcolI.add("type", "FLOAT");
+            colarr.add(flatcolI);
+        }
+        builder.add("attributes", colarr);
+        JsonObject dataObject = builder.build();
+        Entity<String> coldef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(coldef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateCollectionFlattend---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Tests the response for creating a collection, that is allready existing.
      *
@@ -523,7 +575,7 @@ public class CollectionRessourceTest {
         if (Response.Status.OK.getStatusCode() != response.getStatus()) {
             return false;
         }
-        
+
         JsonParser parser = Json.createParser(new StringReader(responseText));
         parser.next();
         JsonObject responseObj = parser.getObject();
@@ -639,8 +691,8 @@ public class CollectionRessourceTest {
             WebTarget target2 = webTarget
                     .path("testcol")
                     .path("create")
-                    .queryParam("storage", STORAGE+"2");
-            
+                    .queryParam("storage", STORAGE + "2");
+
             // Recreate on second storage
             Entity<String> coldef2 = Entity.json(responseText);
 
@@ -659,8 +711,8 @@ public class CollectionRessourceTest {
             return false;
         }
     }
-    
-        /**
+
+    /**
      * Test create a collection with geometry attributes
      *
      * @return true if the collection could be created

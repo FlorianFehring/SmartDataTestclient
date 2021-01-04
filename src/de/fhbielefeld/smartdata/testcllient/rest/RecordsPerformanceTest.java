@@ -20,19 +20,18 @@ public class RecordsPerformanceTest {
 //    private static final String RESOURCE = "records";
 //    private static final String STORAGE = "smartmonitoring";
 //    private static final String COLLECTION = "data_10";
-    
+
     // Testing SmartMonitoring on Server
     /*private static final String SERVER = "http://epigraf1.ad.fh-bielefeld.de:8080/SmartMonitoringBackendEnviron"; // "http://localhost:8080/SmartData/smartdata/";
     private static final String RESOURCE = "data";
     private static final String STORAGE = "smartmonitoring";
     private static final String COLLECTION = "getSets";*/
-    
     // Testing SmartData local
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
     private static final String RESOURCE = "records";
     private static final String STORAGE = "smartmonitoring";
     private static final String COLLECTION = "data_10";
-    
+
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
     private static final int createRuns = 100;
@@ -134,8 +133,8 @@ public class RecordsPerformanceTest {
         WebTarget target = webTarget.path(COLLECTION)
                 .path("1")
                 .queryParam("storage", STORAGE);
-                //.queryParam("ooid", 10)
-                //.queryParam("limit", 1);
+        //.queryParam("ooid", 10)
+        //.queryParam("limit", 1);
 
         // Measurements storage
         long[] neededTimes = new long[getRuns];
@@ -169,9 +168,14 @@ public class RecordsPerformanceTest {
                 return false;
             }
             MultivaluedMap<String, Object> headers = response.getHeaders();
-            Integer size = Integer.parseInt((String) headers.getFirst("Content-Length"));
-            neededSize[i] = size;
-            neededSizeSum += size;
+            String contLength = (String) headers.getFirst("Content-Length");
+            if (contLength == null) {
+
+            } else {
+                Integer size = Integer.parseInt(contLength);
+                neededSize[i] = size;
+                neededSizeSum += size;
+            }
             // Get example response
             if (i == createRuns - 1) {
                 exampleResponse = response.readEntity(String.class);
@@ -209,8 +213,8 @@ public class RecordsPerformanceTest {
         WebTarget target = webTarget.path(COLLECTION)
                 .queryParam("storage", STORAGE)
                 .queryParam("size", 1);
-                //.queryParam("ooid", 10)
-                //.queryParam("limit", getSets);
+        //.queryParam("ooid", 10)
+        //.queryParam("limit", getSets);
 
         // Measurements storage
         long[] neededTimes = new long[getRuns];

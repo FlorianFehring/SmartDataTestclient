@@ -48,6 +48,7 @@ public class SmartDataTestCllient {
         builder.add("testCreateCollectionGivingId", trt.testCreateCollectionGivingId());
         builder.add("testCreateCollectionGivingStringId", trt.testCreateCollectionGivingStringId());
         builder.add("testCreateCollectionFlattend", trt.testCreateCollectionFlattend());
+        builder.add("testCreateCollectionBinary", trt.testCreateCollectionBinary());
         builder.add("testGetAttributes", trt.testGetAttributes());
         builder.add("testGetAttributesNoExSchema", trt.testGetAttributesNoExSchema());
         builder.add("testAddAttributes", trt.testAddAttributes());
@@ -63,8 +64,10 @@ public class SmartDataTestCllient {
         builder.add("testCreateSetFlattend", rrt.testCreateSetFlattend());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
         builder.add("testCreateSetStrid",rrt.testCreateSetStrid());
+        builder.add("testCreateSetBinary", rrt.testCreateSetBinary());
         builder.add("testGetCountSets", rrt.testGetCountSets());
         builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
+        builder.add("testGetSetBinaryData", rrt.testGetSetBinaryData());
         builder.add("testGetSetDeflatted", rrt.testGetSetDeflatted());
         builder.add("testReCreateSetSimple",rrt.testReCreateSetSimple());
         builder.add("testGetSetsLimit", rrt.testGetSetsLimit());

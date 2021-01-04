@@ -84,6 +84,11 @@ public class CollectionRessourceTest {
         jsoncol.add("name", "json_value");
         jsoncol.add("type", "JSON");
         colarr.add(jsoncol);
+        // BYTEA column
+        JsonObjectBuilder byteacol = Json.createObjectBuilder();
+        byteacol.add("name", "bytea_value");
+        byteacol.add("type", "BYTEA");
+        colarr.add(byteacol);
         // Create attribute array
         builder.add("attributes", colarr);
         JsonObject dataObject = builder.build();
@@ -374,6 +379,46 @@ public class CollectionRessourceTest {
         }
     }
 
+    /**
+     * Test create a collection with binary data columns
+     *
+     * @return true if the collection could be created
+     */
+    public boolean testCreateCollectionBinary() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("testcolbinary")
+                .path("create")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        JsonArrayBuilder colarr = Json.createArrayBuilder();
+        // BYTEA column
+        JsonObjectBuilder byteacol = Json.createObjectBuilder();
+        byteacol.add("name", "bytea_value");
+        byteacol.add("type", "BYTEA");
+        colarr.add(byteacol);
+        // Create attribute array
+        builder.add("attributes", colarr);
+        JsonObject dataObject = builder.build();
+        Entity<String> coldef = Entity.json(dataObject.toString());
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(coldef);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateCollectionBinary---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Tests the response for creating a collection, that is allready existing.
      *

@@ -85,6 +85,8 @@ public class SmartDataTestCllient {
         // Geometry support tests
         builder.add("testCreateGeoSetsSimple", rrt.testCreateGeoSetsSimple());
         builder.add("testGetGeoSetsSimple", rrt.testGetGeoSetsSimple());
+        builder.add("testCreateSetGeojson", rrt.testCreateSetGeojson());
+        builder.add("testGetGeoSetsGeoJson", rrt.testGetGeoSetsGeoJson());
         // Tests with filter
         builder.add("testEQFilterString",rrt.testEQFilterString());
         builder.add("testEQFilterFloat",rrt.testEQFilterFloat());

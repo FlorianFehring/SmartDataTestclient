@@ -74,7 +74,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test createing a dataset with string id
      *
@@ -109,9 +109,9 @@ public class RecordsRessourceTest {
         }
     }
 
-    /** 
+    /**
      * Create a flattend dataset
-     * 
+     *
      * @return true if the collection was created
      */
     public boolean testCreateSetFlattend() {
@@ -150,7 +150,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test createing a dataset with binary data
      *
@@ -182,7 +182,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test recreateing a simple dataset
      *
@@ -273,7 +273,7 @@ public class RecordsRessourceTest {
 
         WebTarget target = webTarget.path("testcolbinary")
                 .path("1")
-                .queryParam("includes","bytea_value")
+                .queryParam("includes", "bytea_value")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
@@ -302,7 +302,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset with json column
      *
@@ -397,7 +397,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests to get a dataset with only included attributes
      *
@@ -597,7 +597,7 @@ public class RecordsRessourceTest {
         }
     }
 
-     /**
+    /**
      * Test get multiple sets
      *
      * @return
@@ -631,11 +631,11 @@ public class RecordsRessourceTest {
                 return false;
             }
             JsonNumber countVal = recordsArr.get(0).asJsonObject().getJsonNumber("count");
-            if(countVal == null) {
+            if (countVal == null) {
                 System.out.println("Expected that there is one attribute called >count< but is not.");
                 return false;
             }
-            if(countVal.intValue() != createdSets) {
+            if (countVal.intValue() != createdSets) {
                 System.out.println("Expected count to deliver >" + createdSets + "< but there where >" + countVal.intValue() + " sets.");
                 return false;
             }
@@ -644,7 +644,7 @@ public class RecordsRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Test get multiple sets from not existing collection
      *
@@ -4047,6 +4047,101 @@ public class RecordsRessourceTest {
     }
 
     /**
+     * Test createing a geojson dataset
+     *
+     * @return true if dataset was created
+     */
+    public boolean testCreateSetGeojson() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is missing could not connect to WebService.");
+        }
+
+        WebTarget target = webTarget
+                .path("testgeocol")
+                .queryParam("storage", STORAGE);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("type", "FeatureCollection");
+        JsonArrayBuilder featuresArr = Json.createArrayBuilder();
+        JsonObjectBuilder featureObj = Json.createObjectBuilder();
+        featureObj.add("type", "Feature");
+        JsonObjectBuilder geomObj = Json.createObjectBuilder();
+        geomObj.add("type", "Point");
+        JsonArrayBuilder coordsArr = Json.createArrayBuilder();
+        coordsArr.add(12.33);
+        coordsArr.add(52.12);
+        geomObj.add("coordinates", coordsArr);
+        featureObj.add("geometry", geomObj);
+        JsonObjectBuilder propObj = Json.createObjectBuilder();
+        propObj.add("name", "testwert");
+        propObj.add("float_value", 12.23);
+        propObj.add("int_value", 12);
+        propObj.add("bool_value", true);
+        propObj.add("ts_value", "2011-12-30T10:15:30");
+        featureObj.add("properties", propObj);
+        featuresArr.add(featureObj);
+        builder.add("features", featuresArr);
+        JsonObject dataObject = builder.build();
+        String json = dataObject.toString();
+        Entity<String> dataset = Entity.json(json);
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(dataset);
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testCreateSetGeojson---");
+            System.out.println("SEND: ");
+            System.out.println(json);
+            System.out.println("RESPONSE:");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            createdGeoSets++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test get multiple geometry sets in geojson format
+     *
+     * @return
+     */
+    public boolean testGetGeoSetsGeoJson() {
+        if (webTarget == null) {
+            System.out.println("WebTarget is null!");
+        }
+
+        WebTarget target = webTarget.path("testgeocol")
+                .queryParam("storage", STORAGE)
+                .queryParam("geojsonattr", "point2d");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        String responseText = response.readEntity(String.class);
+        if (PRINT_DEBUG_MESSAGES) {
+            System.out.println("---testGetGeoSetsGeoJson---");
+            System.out.println(response.getStatusInfo());
+            System.out.println(responseText);
+        }
+        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+            JsonParser parser = Json.createParser(new StringReader(responseText));
+            parser.next();
+            JsonObject responseObj = parser.getObject();
+            JsonArray recordsArr = responseObj.getJsonArray("features");
+            if (recordsArr == null) {
+                System.out.println(">features< attribute is missing.");
+                return false;
+            }
+            if (recordsArr.size() != createdGeoSets) {
+                System.out.println("Expected that there are " + createdGeoSets + " datasets, but there where " + recordsArr.size());
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Tests to get a dataset using a contains geofilter
      *
      * @return
@@ -4452,7 +4547,7 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != this.createdGeoSets) {
+            if (recordsArr.size() != (this.createdGeoSets-1)) {
                 System.out.println("Expected that there are " + this.createdGeoSets + " dataset, but there were " + recordsArr.size());
                 return false;
             }
@@ -4492,8 +4587,8 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != 0) {
-                System.out.println("Expected that there are 0 dataset, but there were " + recordsArr.size());
+            if (recordsArr.size() != 1) {
+                System.out.println("Expected that there are 1 dataset, but there were " + recordsArr.size());
                 return false;
             }
             return true;
@@ -5095,7 +5190,7 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != this.createdGeoSets) {
+            if (recordsArr.size() != this.createdGeoSets-1) {
                 System.out.println("Expected that there are " + this.createdGeoSets + " dataset, but there were " + recordsArr.size());
                 return false;
             }
@@ -5163,7 +5258,7 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != this.createdGeoSets) {
+            if (recordsArr.size() != this.createdGeoSets-1) {
                 System.out.println("Expected that there are " + this.createdGeoSets + " dataset, but there were " + recordsArr.size());
                 return false;
             }
@@ -5231,7 +5326,7 @@ public class RecordsRessourceTest {
                 System.out.println(">records< attribute is missing.");
                 return false;
             }
-            if (recordsArr.size() != this.createdGeoSets) {
+            if (recordsArr.size() != this.createdGeoSets-1) {
                 System.out.println("Expected that there are " + this.createdGeoSets + " dataset, but there were " + recordsArr.size());
                 return false;
             }

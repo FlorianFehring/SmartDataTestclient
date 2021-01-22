@@ -87,6 +87,9 @@ public class SmartDataTestCllient {
         builder.add("testGetGeoSetsSimple", rrt.testGetGeoSetsSimple());
         builder.add("testCreateSetGeojson", rrt.testCreateSetGeojson());
         builder.add("testGetGeoSetsGeoJson", rrt.testGetGeoSetsGeoJson());
+        builder.add("testGetGeoSets2DTransform", rrt.testGetGeoSets2DTransform());
+        builder.add("testGetGeoSets3DTransform", rrt.testGetGeoSets3DTransform());
+        builder.add("testGetGeoSetsLatLonTransform", rrt.testGetGeoSetsLatLonTransform());
         // Tests with filter
         builder.add("testEQFilterString",rrt.testEQFilterString());
         builder.add("testEQFilterFloat",rrt.testEQFilterFloat());

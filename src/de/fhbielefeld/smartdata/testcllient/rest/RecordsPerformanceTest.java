@@ -2,6 +2,15 @@ package de.fhbielefeld.smartdata.testcllient.rest;
 
 import de.fhbielefeld.scl.rest.util.WebTargetCreator;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -29,16 +38,20 @@ public class RecordsPerformanceTest {
     // Testing SmartData local
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
     private static final String RESOURCE = "records";
-    private static final String STORAGE = "smartmonitoring";
-    private static final String COLLECTION = "data_10";
+    private static final String STORAGE = "test";
+    private static final String COLLECTION = "testcol";
 
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
-    private static final int createRuns = 100;
+    private static final int createRuns = 100000;
     private static final int getRuns = 100;
     private static final int getSets = 100; // Number of datasets requested with one request
-
+    private static final List<RecordsCreateThreadData>createSetsMultithread = new ArrayList<>();
+    
     public RecordsPerformanceTest() {
+        createSetsMultithread.add(new RecordsCreateThreadData("testcol", STORAGE, 100));
+        createSetsMultithread.add(new RecordsCreateThreadData("testcol", STORAGE, 100));
+        
         startDateTime = LocalDateTime.now();
         webTarget = WebTargetCreator.createWebTarget(SERVER, RESOURCE);
     }
@@ -53,73 +66,83 @@ public class RecordsPerformanceTest {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
-//        // Create target
-//        WebTarget target = webTarget
-//                .path(COLLECTION)
-//                .queryParam("storage", STORAGE);
-//        // Create dataset
-//        JsonObjectBuilder builder = Json.createObjectBuilder();
-//        builder.add("name", "testwert");
-//        builder.add("float_value", 12.2323);
-//        builder.add("int_value", 12);
-//        builder.add("ts_value", "2011-12-30T10:15:30");
-//        JsonObject dataObject = builder.build();
-//        Entity<String> collectiondef = Entity.json(dataObject.toString());
-//
-//        // Measurements storage
-//        long[] neededTimes = new long[createRuns];
-//        long neededTimeSum = 0;
-//        long quickestTime = 300000000;
-//        long slowestTime = 0;
-//        int[] neededSize = new int[createRuns];
-//        long neededSizeSum = 0;
-//        String exampleResponse = null;
-//
-//        for (int i = 0; i < createRuns; i++) {
-//            // Measure needed time
-//            long start = System.nanoTime();
-//            Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
-//            long finish = System.nanoTime();
-//            neededTimes[i] = finish - start;
-//            neededTimeSum += neededTimes[i];
-//            if (neededTimes[i] < quickestTime) {
-//                quickestTime = neededTimes[i];
-//            }
-//            if (neededTimes[i] > slowestTime) {
-//                slowestTime = neededTimes[i];
-//            }
-//            // Check status
-//            if (Response.Status.OK.getStatusCode() != response.getStatus()) {
-//                String responseText = response.readEntity(String.class);
-//                System.err.println("ERROR executing performanceCreateSetSimple:");
-//                System.err.println(response.getStatusInfo());
-//                System.err.println(responseText);
-//                return false;
-//            }
-//            MultivaluedMap<String, Object> headers = response.getHeaders();
-//            Integer size = Integer.parseInt((String) headers.getFirst("Content-Length"));
-//            neededSize[i] = size;
-//            neededSizeSum += size;
-//            // Get example response
-//            if (i == createRuns - 1) {
-//                exampleResponse = response.readEntity(String.class);
-//            }
-//        }
-//
-//        // Calculate statistics
-//        System.out.println("======== CREATE performance ==========");
-//        double neededTimeSec = neededTimeSum / 1000 / 1000 / 1000;
-//        System.out.println("Total used time: " + neededTimeSec + " sec");
-//        System.out.println("Average time:    " + neededTimeSec / createRuns + " sec");
-//        System.out.println("Quickest request:" + quickestTime / 1000 / 1000 + " ms");
-//        System.out.println("Slowest request: " + slowestTime / 1000 / 1000 + " ms");
-//        System.out.println("Total bytes:     " + neededSizeSum + " byte");
-//        System.out.println("Average size:    " + neededSizeSum / createRuns + " byte");
-//        System.out.println("---- Example response ----");
-//        System.out.println(exampleResponse);
+        // Create target
+        WebTarget target = webTarget
+                .path(COLLECTION)
+                .queryParam("storage", STORAGE);
+        // Create dataset
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("name", "testwert");
+        builder.add("float_value", 12.2323);
+        builder.add("int_value", 12);
+        builder.add("ts_value", "2011-12-30T10:15:30");
+        JsonObject dataObject = builder.build();
+        Entity<String> collectiondef = Entity.json(dataObject.toString());
+
+        // Measurements storage
+        long[] neededTimes = new long[createRuns];
+        long neededTimeSum = 0;
+        long quickestTime = 300000000;
+        long slowestTime = 0;
+        int[] neededSize = new int[createRuns];
+        long neededSizeSum = 0;
+        String exampleResponse = null;
+
+        for (int i = 0; i < createRuns; i++) {
+            // Measure needed time
+            long start = System.nanoTime();
+            Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
+            long finish = System.nanoTime();
+            neededTimes[i] = finish - start;
+            neededTimeSum += neededTimes[i];
+            if (neededTimes[i] < quickestTime) {
+                quickestTime = neededTimes[i];
+            }
+            if (neededTimes[i] > slowestTime) {
+                slowestTime = neededTimes[i];
+            }
+            // Check status
+            if (Response.Status.CREATED.getStatusCode() != response.getStatus()) {
+                String responseText = response.readEntity(String.class);
+                System.err.println("ERROR executing performanceCreateSetSimple:");
+                System.err.println(response.getStatusInfo());
+                System.err.println(responseText);
+                return false;
+            }
+            MultivaluedMap<String, Object> headers = response.getHeaders();
+            Integer size = Integer.parseInt((String) headers.getFirst("Content-Length"));
+            neededSize[i] = size;
+            neededSizeSum += size;
+            // Get example response
+            if (i == createRuns - 1) {
+                exampleResponse = response.readEntity(String.class);
+            }
+        }
+
+        // Calculate statistics
+        System.out.println("======== CREATE performance ==========");
+        double neededTimeSec = neededTimeSum / 1000 / 1000 / 1000;
+        System.out.println("Total used time: " + neededTimeSec + " sec");
+        System.out.println("Average time:    " + neededTimeSec / createRuns + " sec");
+        System.out.println("Quickest request:" + quickestTime / 1000 / 1000 + " ms");
+        System.out.println("Slowest request: " + slowestTime / 1000 / 1000 + " ms");
+        System.out.println("Total bytes:     " + neededSizeSum + " byte");
+        System.out.println("Average size:    " + neededSizeSum / createRuns + " byte");
+        System.out.println("---- Example response ----");
+        System.out.println(exampleResponse);
         return true;
     }
 
+    public boolean performanceCreateSetMultiThread() {
+        
+        // Create and run threads for simulating simultanous requests
+        for(RecordsCreateThreadData curRequest : createSetsMultithread) {
+            RecordsCreatePerformanceThread curThread = new RecordsCreatePerformanceThread(webTarget,curRequest);
+            curThread.start();
+        }
+        return true;
+    }
+    
     /**
      * Tests to get a simple dataset
      *

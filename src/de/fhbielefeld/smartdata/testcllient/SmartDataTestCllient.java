@@ -183,6 +183,7 @@ public class SmartDataTestCllient {
         // Performance mesurement
         RecordsPerformanceTest rpt = new RecordsPerformanceTest();
         builder.add("performanceCreateSetSimple", rpt.performanceCreateSetSimple());
+        builder.add("performanceCreateSetMultiThread", rpt.performanceCreateSetMultiThread());
         builder.add("performanceGetSetSimple", rpt.performanceGetSetSimple());
         builder.add("performanceGetSetsSimple", rpt.performanceGetSetsSimple());
         // Tests with geofilter

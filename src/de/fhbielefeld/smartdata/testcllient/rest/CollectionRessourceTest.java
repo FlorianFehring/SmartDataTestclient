@@ -45,7 +45,6 @@ public class CollectionRessourceTest {
 
         WebTarget target = webTarget
                 .path("testcol")
-                .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         JsonArrayBuilder colarr = Json.createArrayBuilder();
@@ -120,7 +119,6 @@ public class CollectionRessourceTest {
 
         WebTarget target = webTarget
                 .path("colwithautoid")
-                .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testcol");
@@ -194,7 +192,6 @@ public class CollectionRessourceTest {
 
         WebTarget target = webTarget
                 .path("colwithid")
-                .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testcol");
@@ -267,7 +264,6 @@ public class CollectionRessourceTest {
 
         WebTarget target = webTarget
                 .path("colwithstrid")
-                .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         JsonArrayBuilder colarr = Json.createArrayBuilder();
@@ -340,7 +336,6 @@ public class CollectionRessourceTest {
 
         WebTarget target = webTarget
                 .path("colflattend")
-                .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         JsonArrayBuilder colarr = Json.createArrayBuilder();
@@ -391,7 +386,6 @@ public class CollectionRessourceTest {
 
         WebTarget target = webTarget
                 .path("testcolbinary")
-                .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         JsonArrayBuilder colarr = Json.createArrayBuilder();
@@ -430,7 +424,6 @@ public class CollectionRessourceTest {
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("name", "testcol");
@@ -735,7 +728,6 @@ public class CollectionRessourceTest {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             WebTarget target2 = webTarget
                     .path("testcol")
-                    .path("create")
                     .queryParam("storage", STORAGE + "2");
 
             // Recreate on second storage
@@ -769,7 +761,6 @@ public class CollectionRessourceTest {
 
         WebTarget target = webTarget
                 .path("testgeocol")
-                .path("create")
                 .queryParam("storage", STORAGE);
         JsonObjectBuilder builder = Json.createObjectBuilder();
         JsonArrayBuilder colarr = Json.createArrayBuilder();

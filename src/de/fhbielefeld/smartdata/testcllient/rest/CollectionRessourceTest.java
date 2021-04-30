@@ -150,10 +150,11 @@ public class CollectionRessourceTest {
             // Check definition
             WebTarget targetQ = webTarget
                     .path("colwithautoid")
-                    .path("getAttributes")
                     .queryParam("storage", STORAGE);
             Response responseQ = targetQ.request(MediaType.APPLICATION_JSON).get();
             String responseTextQ = responseQ.readEntity(String.class);
+            System.out.println("Response from definition check: " + responseQ.getStatus());
+            System.out.println(responseTextQ);
 
             JsonParser parserQ = Json.createParser(new StringReader(responseTextQ));
             parserQ.next();
@@ -222,7 +223,6 @@ public class CollectionRessourceTest {
             // Check definition
             WebTarget targetQ = webTarget
                     .path("colwithid")
-                    .path("getAttributes")
                     .queryParam("storage", STORAGE);
             Response responseQ = targetQ.request(MediaType.APPLICATION_JSON).get();
             String responseTextQ = responseQ.readEntity(String.class);
@@ -293,10 +293,11 @@ public class CollectionRessourceTest {
             // Check definition
             WebTarget targetQ = webTarget
                     .path("colwithid")
-                    .path("getAttributes")
                     .queryParam("storage", STORAGE);
             Response responseQ = targetQ.request(MediaType.APPLICATION_JSON).get();
             String responseTextQ = responseQ.readEntity(String.class);
+            System.out.println("Response from definition check: " + responseQ.getStatus());
+            System.out.println(responseTextQ);
 
             JsonParser parserQ = Json.createParser(new StringReader(responseTextQ));
             parserQ.next();
@@ -323,10 +324,10 @@ public class CollectionRessourceTest {
         }
     }
 
-    /** 
+    /**
      * Create a collection with attributes that are flattend datasets (e.g. #
      * numbered attributes {U1,I11},{U2,I2},...
-     * 
+     *
      * @return true if the collection was created
      */
     public boolean testCreateCollectionFlattend() {
@@ -412,7 +413,7 @@ public class CollectionRessourceTest {
             return false;
         }
     }
-    
+
     /**
      * Tests the response for creating a collection, that is allready existing.
      *
@@ -468,7 +469,6 @@ public class CollectionRessourceTest {
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("getAttributes")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
@@ -494,7 +494,6 @@ public class CollectionRessourceTest {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
         WebTarget target = webTarget.path("testcol")
-                .path("getAttributes")
                 .queryParam("storage", "notexisting");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
@@ -600,7 +599,6 @@ public class CollectionRessourceTest {
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("getAttributes")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);
@@ -669,7 +667,6 @@ public class CollectionRessourceTest {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             // Request 
             WebTarget targetCheck = webTarget.path("testcol")
-                    .path("getAttributes")
                     .queryParam("storage", STORAGE);
             Response responseCheck = targetCheck.request(MediaType.APPLICATION_JSON).get();
             String responseTextCheck = responseCheck.readEntity(String.class);
@@ -716,7 +713,6 @@ public class CollectionRessourceTest {
         }
 
         WebTarget target = webTarget.path("testcol")
-                .path("getAttributes")
                 .queryParam("storage", STORAGE);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         String responseText = response.readEntity(String.class);

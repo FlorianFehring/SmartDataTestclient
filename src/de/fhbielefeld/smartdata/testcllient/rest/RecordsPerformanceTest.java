@@ -31,10 +31,10 @@ public class RecordsPerformanceTest {
 //    private static final String COLLECTION = "data_10";
 
     // Testing SmartMonitoring on Server
-    /*private static final String SERVER = "http://epigraf1.ad.fh-bielefeld.de:8080/SmartMonitoringBackendEnviron"; // "http://localhost:8080/SmartData/smartdata/";
-    private static final String RESOURCE = "data";
-    private static final String STORAGE = "smartmonitoring";
-    private static final String COLLECTION = "getSets";*/
+//    private static final String SERVER = "http://epigraf1.ad.fh-bielefeld.de:8080/SmartMonitoringBackendEnviron"; // "http://localhost:8080/SmartData/smartdata/";
+//    private static final String RESOURCE = "data";
+//    private static final String STORAGE = "smartmonitoring";
+//    private static final String COLLECTION = "getSets";
     // Testing SmartData local
     private static final String SERVER = "http://localhost:8080/SmartData/smartdata/";
     private static final String RESOURCE = "records";
@@ -43,7 +43,7 @@ public class RecordsPerformanceTest {
 
     private static WebTarget webTarget;
     private static final boolean PRINT_DEBUG_MESSAGES = true;
-    private static final int createRuns = 100000;
+    private static final int createRuns = 100;
     private static final int getRuns = 100;
     private static final int getSets = 100; // Number of datasets requested with one request
     private static final List<RecordsCreateThreadData>createSetsMultithread = new ArrayList<>();
@@ -66,6 +66,9 @@ public class RecordsPerformanceTest {
             System.out.println("WebTarget is missing could not connect to WebService.");
         }
 
+        System.out.println("----performanceCreateSetSimple()----");
+        System.out.println("Starting performance test for creating of " + createRuns + " datasets.");
+        
         // Create target
         WebTarget target = webTarget
                 .path(COLLECTION)
@@ -88,7 +91,14 @@ public class RecordsPerformanceTest {
         long neededSizeSum = 0;
         String exampleResponse = null;
 
+        double donePercentage;
         for (int i = 0; i < createRuns; i++) {
+            double curRun = i;
+            double allRun = createRuns;
+            donePercentage = curRun / allRun * 100;
+            if(donePercentage % 1 == 0) {
+                System.out.println(donePercentage + "% done (" + i + " datasets)");
+            }
             // Measure needed time
             long start = System.nanoTime();
             Response response = target.request(MediaType.APPLICATION_JSON).post(collectiondef);
@@ -156,8 +166,8 @@ public class RecordsPerformanceTest {
         WebTarget target = webTarget.path(COLLECTION)
                 .path("1")
                 .queryParam("storage", STORAGE);
-        //.queryParam("ooid", 10)
-        //.queryParam("limit", 1);
+//        .queryParam("ooid", 10)
+//        .queryParam("limit", 1);
 
         // Measurements storage
         long[] neededTimes = new long[getRuns];
@@ -235,7 +245,7 @@ public class RecordsPerformanceTest {
 
         WebTarget target = webTarget.path(COLLECTION)
                 .queryParam("storage", STORAGE)
-                .queryParam("size", 1);
+                .queryParam("size", getSets);
         //.queryParam("ooid", 10)
         //.queryParam("limit", getSets);
 

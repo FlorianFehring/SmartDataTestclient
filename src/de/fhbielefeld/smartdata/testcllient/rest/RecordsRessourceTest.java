@@ -67,7 +67,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             createdSets++;
             return true;
         } else {

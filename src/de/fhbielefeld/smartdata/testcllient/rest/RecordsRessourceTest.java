@@ -102,7 +102,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             return true;
         } else {
             return false;
@@ -144,7 +144,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             return true;
         } else {
             return false;
@@ -176,7 +176,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             return true;
         } else {
             return false;
@@ -212,7 +212,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             createdSets++;
             // Add dataset id to dataset
             builder.add("id", Integer.parseInt(responseText));
@@ -484,7 +484,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             createdSets += 4;
             if (responseText.contains(",")) {
                 return true;

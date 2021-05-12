@@ -49,6 +49,7 @@ public class SmartDataTestCllient {
         builder.add("testCreateCollectionGivingStringId", trt.testCreateCollectionGivingStringId());
         builder.add("testCreateCollectionFlattend", trt.testCreateCollectionFlattend());
         builder.add("testCreateCollectionBinary", trt.testCreateCollectionBinary());
+        builder.add("testCreateGeoCollection", trt.testCreateGeoCollection());
         builder.add("testGetAttributes", trt.testGetAttributes());
         builder.add("testGetAttributesNoExSchema", trt.testGetAttributesNoExSchema());
         builder.add("testAddAttributes", trt.testAddAttributes());
@@ -56,14 +57,13 @@ public class SmartDataTestCllient {
         builder.add("testGetGeoAttributes", trt.testGetGeoAttributes());
         builder.add("testChangeSRID", trt.testChangeSRID());
         builder.add("testGetAttributesAndCreateTable", trt.testGetAttributesAndCreateTable());
-        builder.add("testCreateGeoCollection", trt.testCreateGeoCollection());
         RecordsRessourceTest rrt = new RecordsRessourceTest();
         builder.add("testCreateSetSimple", rrt.testCreateSetSimple());
         builder.add("testGetSetSimple", rrt.testGetSetSimple());
         builder.add("testGetSetWithJson", rrt.testGetSetWithJson());
         builder.add("testCreateSetFlattend", rrt.testCreateSetFlattend());
         builder.add("testCreateSetsSimple", rrt.testCreateSetsSimple());
-        builder.add("testCreateSetStrid",rrt.testCreateSetStrid());
+        builder.add("testCreateSetStrid", rrt.testCreateSetStrid());
         builder.add("testCreateSetBinary", rrt.testCreateSetBinary());
         builder.add("testGetCountSets", rrt.testGetCountSets());
         builder.add("testGetSetsSimple", rrt.testGetSetsSimple());
@@ -183,7 +183,7 @@ public class SmartDataTestCllient {
         // Performance mesurement
         RecordsPerformanceTest rpt = new RecordsPerformanceTest();
         builder.add("performanceCreateSetSimple", rpt.performanceCreateSetSimple());
-        builder.add("performanceCreateSetMultiThread", rpt.performanceCreateSetMultiThread());
+//        builder.add("performanceCreateSetMultiThread", rpt.performanceCreateSetMultiThread());
         builder.add("performanceGetSetSimple", rpt.performanceGetSetSimple());
         builder.add("performanceGetSetsSimple", rpt.performanceGetSetsSimple());
         // Tests with geofilter

@@ -10,7 +10,6 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
-import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -551,7 +550,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             createdSets++;
             return true;
         } else {
@@ -3999,7 +3998,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             createdGeoSets += 4;
             if (responseText.contains(",")) {
                 return true;
@@ -4094,7 +4093,7 @@ public class RecordsRessourceTest {
             System.out.println(response.getStatusInfo());
             System.out.println(responseText);
         }
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+        if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
             createdGeoSets++;
             return true;
         } else {
